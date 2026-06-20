@@ -59,3 +59,34 @@ p{
     border-radius: 45px;
 }
 
+.image-card {
+    position: relative;
+    &:hover{
+        .titre-image{
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        img{
+            filter: brightness(0.5);
+            transition: filter 0.5s ease-in-out;
+        }
+    }
+
+    img {
+        max-width: 370px;
+        max-height: 250px;
+        min-width: 115px;
+        min-height: 115px;
+        transition: all 0.5s;
+    }
+
+    .titre-image{
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: all 0.5s;
+    }
+}
