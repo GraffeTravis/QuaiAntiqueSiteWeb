@@ -12030,6 +12030,11 @@ p {
   text-align: justify;
 }
 
+.justify-content {
+  align-items: center;
+  justify-content: center;
+}
+
 .b-rounded {
   border-radius: 45px;
 }
@@ -12039,24 +12044,23 @@ p {
 }
 .image-card:hover .titre-image {
   opacity: 1;
-  transition: opacity 0.5s ease-in-out;
 }
 .image-card:hover img {
-  filter: brightness(0.5);
-  transition: filter 0.5s ease-in-out;
+  filter: brightness(0.3);
 }
 .image-card img {
-  max-width: 370px;
-  max-height: 250px;
-  min-width: 115px;
-  min-height: 115px;
-  transition: all 0.5s;
+  transition: all 0.3s;
+  max-height: 300px;
+  max-width: 270px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  padding: 5px;
 }
 .image-card .titre-image {
   position: absolute;
-  left: 50%;
   top: 50%;
+  right: 60%;
   transform: translate(-50%, -50%);
   opacity: 0;
-  transition: all 0.5s;
+  transition: all 0.3s;
 }/*# sourceMappingURL=main.css.map */
