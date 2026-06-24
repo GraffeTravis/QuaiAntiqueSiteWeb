@@ -92,3 +92,9 @@ p{
         transition: all 0.3s;
     }
 }
+
+.type-card{
+    max-height: 450px;
+    max-width: 420px;
+    object-fit: cover;
+}
