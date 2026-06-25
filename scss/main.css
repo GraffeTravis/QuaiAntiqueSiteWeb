@@ -2084,6 +2084,7 @@ progress {
 }
 .form-label {
   margin-bottom: 0.5rem;
+  color: #906427;
 }
 
 .col-form-label {
@@ -2092,6 +2093,7 @@ progress {
   margin-bottom: 0;
   font-size: inherit;
   line-height: 1.5;
+  color: #906427;
 }
 
 .col-form-label-lg {
