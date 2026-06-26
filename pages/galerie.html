@@ -4,45 +4,103 @@
     </div>
 </div>
 
-<div class="container justify-content">
+<div class="container justify-content mt-4">
+    <div class="text-center">
+        <button type="button" class="btn btn-primary b-rounded" data-bs-toggle="modal" data-bs-target="#EditionPhotomodal">Ajouter une photo</button>
+    </div>
     <div class="row row-cols-2 row-cols-lg-3">
         <div class="col p-3">
             <div class="image-card text-white">
-                <img src="/images/plat2.jpg" alt="Plat 1" class="b-rounded w-100">
+                <img src="../images/plat2.jpg" alt="Plat 1" class="b-round w-100">
+                <p class="titre-image">Titre</p>
+                <div class="action-image-buttons">
+                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#EditionPhotomodal"><i class="bi bi-pencil-square"></i></button>
+                    <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#DeletePhotomodal"><i class="bi bi-trash"></i></button>
+                </div>
+            </div> 
+        </div>
+        <div class="col p-3">
+            <div class="image-card text-white">
+                <img src="../images/plat2.jpg" alt="Plat 1" class="b-round w-100">
                 <p class="titre-image">Titre</p>
             </div> 
         </div>
         <div class="col p-3">
             <div class="image-card text-white">
-                <img src="/images/plat2.jpg" alt="Plat 1" class="b-rounded w-100">
+                <img src="../images/plat2.jpg" alt="Plat 1" class="b-round w-100">
                 <p class="titre-image">Titre</p>
             </div> 
         </div>
         <div class="col p-3">
             <div class="image-card text-white">
-                <img src="/images/plat2.jpg" alt="Plat 1" class="b-rounded w-100">
+                <img src="../images/plat2.jpg" alt="Plat 1" class="b-round w-100">
                 <p class="titre-image">Titre</p>
             </div> 
         </div>
         <div class="col p-3">
             <div class="image-card text-white">
-                <img src="/images/plat2.jpg" alt="Plat 1" class="b-rounded w-100">
+                <img src="../images/plat2.jpg" alt="Plat 1" class="b-round w-100">
                 <p class="titre-image">Titre</p>
             </div> 
         </div>
         <div class="col p-3">
             <div class="image-card text-white">
-                <img src="/images/plat2.jpg" alt="Plat 1" class="b-rounded w-100">
-                <p class="titre-image">Titre</p>
-            </div> 
-        </div>
-        <div class="col p-3">
-            <div class="image-card text-white">
-                <img src="/images/plat2.jpg" alt="Plat 1" class="b-rounded w-100">
+                <img src="../images/plat2.jpg" alt="Plat 1" class="b-round w-100">
                 <p class="titre-image">Titre</p>
             </div> 
         </div>
         
     </div>
+    <div class="text-center">
+        <a type="button" href="#" class="btn btn-primary b-rounded">Ajouter une photo</a>
+    </div>
+</div>
 
+
+<!-- Modal d'édition -->
+<div class="modal fade" id="EditionPhotomodal" tabindex="-1" aria-labelledby="EditionPhotomodalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="EditionPhotomodalLabel">Edition Photo</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="mb-3 mt-3">
+                <label for="NamePhotoInput" class="form-label">Titre</label>
+                <input type="text" class="form-control" id="NamePhotoInput" placeholder="pâtes au charbon">
+            </div>
+            <div class="mb-3">
+                <label for="ImageInput" class="form-label">Image</label>
+                <input type="file" class="form-control" id="ImageInput">
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de suppression -->
+<div class="modal fade" id="DeletePhotomodal" tabindex="-1" aria-labelledby="DeletePhotomodalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="DeletePhotomodalLabel">Êtes-vous sûr de vouloir supprimer cette photo ?</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="mb-3 mt-3">
+                <p>Titre</p>
+                <img src="../images/plat2.jpg" alt="Plat 1" class="b-round w-100">
+            </div>
+            <div class="mb-3 text-center">
+                <button type="button" class="btn btn-danger">Supprimer</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

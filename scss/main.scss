@@ -13,7 +13,7 @@ main{
 }
 
 footer.footer{
-    padding: 15px;
+    padding-top: 15px;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -67,7 +67,7 @@ p{
 .image-card{
     position:relative;
     &:hover{
-        .titre-image{
+        .titre-image, .action-image-buttons{
             opacity: 1;
         }
         img{
@@ -77,19 +77,25 @@ p{
 
     img{
         transition: all 0.3s;
-        max-height: 300px;
-        max-width: 270px;
-        object-fit: cover;
-        padding: 5px;
     }
 
     .titre-image{
         position: absolute;
         top:50%;
-        right:60%;
+        right:50%;
         transform: translate(-50%, -50%);
         opacity: 0;
         transition: all 0.3s;
+    }
+
+    .action-image-buttons{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        padding: 5px;
+        display: flex;
+        justify-content: space-between;
     }
 }
 
