@@ -104,3 +104,11 @@ p{
     max-width: 420px;
     object-fit: cover;
 }
+
+.allreservations{
+    a{
+        display: block;
+        color: $black;
+        padding:10px;
+    }
+}

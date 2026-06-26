@@ -12076,4 +12076,10 @@ p {
   max-width: 420px;
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.allreservations a {
+  display: block;
+  color: #292222;
+  padding: 10px;
 }/*# sourceMappingURL=main.css.map */
