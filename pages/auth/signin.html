@@ -7,20 +7,22 @@
 <div class="container">
     <form>
         <div class="mb-3 mt-3">
-            <label for="emailInput" class="form-label">Adresse mail</label>
-            <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp">
-            <div id="emailHelp" class="form-text">Nous ne partagerons pas votre adresse mail.</div>
+            <label for="MailInput" class="form-label">Adresse mail</label>
+            <input type="email" class="form-control" id="MailInput" aria-describedby="emailHelp">
+                <div class="invalid-feedback">
+                    Votre adresse mail ou mot de passe est incorrect.
+                </div>
         </div>
         <div class="mb-3">
-            <label for="passwordInput" class="form-label">Mot de passe</label>
-            <input type="password" class="form-control" id="passwordInput">
+            <label for="PasswordInput" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" id="PasswordInput">
         </div>
         <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="exampleCheck1">
             <label class="form-check-label text-primary" for="exampleCheck1">Se souvenir de moi</label>
         </div>
         <div class="text-center">
-            <button type="submit" class="btn btn-primary">Se connecter</button>
+            <button type="button" class="btn btn-primary" id="btnSignin">Se connecter</button>
             <div class="mt-2">
                 <a href="/signup" class="text-primary">Vous n'avez pas de compte? Inscrivez-vous!</a>
             </div>
