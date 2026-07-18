@@ -5,17 +5,17 @@
 </div>
 
 <div class="container">
-    <form>
+    <form id="signinForm">
         <div class="mb-3 mt-3">
             <label for="MailInput" class="form-label">Adresse mail</label>
-            <input type="email" class="form-control" id="MailInput" aria-describedby="emailHelp">
+            <input type="email" class="form-control" id="MailInput" aria-describedby="emailHelp" name="Mail">
                 <div class="invalid-feedback">
                     Votre adresse mail ou mot de passe est incorrect.
                 </div>
         </div>
         <div class="mb-3">
             <label for="PasswordInput" class="form-label">Mot de passe</label>
-            <input type="password" class="form-control" id="PasswordInput">
+            <input type="password" class="form-control" id="PasswordInput" name="Mdp">
         </div>
         <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="exampleCheck1">
