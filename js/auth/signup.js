@@ -118,7 +118,7 @@ fetch(apiUrl+"registration", requestOptions)
     }
   })
   .then(result => {
-    alert("Inscription réussie ! Bienvenue "+ dataForm.get("Prenom") + ", vous pouvez désormais vous connecter.");
+    alert('Inscription réussie ! Bienvenue [dataForm.get("Prenom")] , vous pouvez désormais vous connecter.');
   })
-  .catch(error => console.log('error', error));
+  .catch(error => console.log('error', error))
 }

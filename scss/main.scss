@@ -66,6 +66,7 @@ p{
 
 .image-card{
     position:relative;
+    max-width: 420px;
     &:hover{
         .titre-image, .action-image-buttons{
             opacity: 1;
@@ -76,26 +77,28 @@ p{
     }
 
     img{
+        display: block;
+        width: 100%;
+        height: auto;
         transition: all 0.3s;
     }
 
     .titre-image{
         position: absolute;
         top:50%;
-        right:50%;
+        left:50%;
         transform: translate(-50%, -50%);
         opacity: 0;
         transition: all 0.3s;
     }
 
-    .action-image-buttons{
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: 100%;
-        padding: 5px;
-        display: flex;
-        justify-content: space-between;
+    .action-image-buttons {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
     }
 }
 
