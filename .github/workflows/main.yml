@@ -15,13 +15,13 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ftp-quaiantique-graffetravis.alwaysdata.net
-          username: quaiantique-graffetravis
+          server: ftp-graffetravis-projetfilrouge.alwaysdata.net
+          username: graffetravis-projetfilrouge
           password: ${{ secrets.ftp_password }}
 
           protocol: ftps
 
-          server-dir: /www/
+          server-dir: /
 
           exclude: |
             **/.git*
