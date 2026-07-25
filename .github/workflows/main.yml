@@ -11,7 +11,7 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: ftp-quaiantique-graffetravis.alwaysdata.net
+        server: ssh-quaiantique-graffetravis.alwaysdata.net
         username: quaiantique-graffetravis
         password: ${{ secrets.ftp_password }}
         exclude: |
