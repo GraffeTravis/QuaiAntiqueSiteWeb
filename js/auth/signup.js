@@ -95,8 +95,8 @@ function InscrireUtilisateur(){
 myHeaders.append("Content-Type", "application/json");
 
 let raw = JSON.stringify({
-  "firstName": dataForm.get("Nom"),
-  "lastName": dataForm.get("Prenom"),
+  "firstName": dataForm.get("Prenom"),
+  "lastName": dataForm.get("Nom"),
   "email": dataForm.get("Mail"),
   "password": dataForm.get("Mdp")
 });
@@ -114,11 +114,12 @@ fetch(apiUrl+"registration", requestOptions)
       return response.json();
     }
     else {
-        alert("Erreur lors de l'inscription, veuillez réessayer.");
-    }
+    alert("Erreur lors de la connexion, veuillez vérifier vos identifiants.");
+    return;
+}
   })
   .then(result => {
-    alert('Inscription réussie ! Bienvenue [dataForm.get("Prenom")] , vous pouvez désormais vous connecter.');
+    alert(`Connexion réussie ! Bienvenue ${dataForm.get("Prenom")}, vous pouvez désormais vous connecter.`);
   })
   .catch(error => console.log('error', error))
 }

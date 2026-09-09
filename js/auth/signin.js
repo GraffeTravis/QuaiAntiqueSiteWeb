@@ -23,34 +23,30 @@ let requestOptions = {
   redirect: 'follow'
 };
 
-fetch(apiUrl+"login", requestOptions)
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-    else {
-        alert("Erreur lors de l'inscription, veuillez réessayer.");
-    }
-  })
-  .then(result => {
-        const token = result.apiToken;
-        setToken(token)
+fetch(apiUrl + "login", requestOptions)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Identifiants incorrects");
+        }
 
+        return response.json();
+    })
+    .then(result => {
+        setToken(result.apiToken);
         setCookie(RoleCookieName, result.roles[0], 7);
-
         window.location.replace("/");
-  })
-  .catch(error => console.log('error', error));
-}
+    })
+    .catch(error => {
+        alert(error.message);
+    });
+  }
 
-    if(inputMail.value == "test@gmail.com" && inputPassword.value == "123") {
+  /*  if(inputMail.value == "test@gmail.com" && inputPassword.value == "123") {
         alert("Vous êtes désormais connecté(test)")
 
         //Il faudra récupérer le vrai token
-        const token = "lkjsdngfljsqdnglkjsdbglkjqskjgkfjgbqslkfdgbskldfgdfgsdgf";
+      
         setToken(token)
-
-        setCookie(RoleCookieName, "admin", 7);
 
         window.location.replace("/");
     }
@@ -58,3 +54,4 @@ fetch(apiUrl+"login", requestOptions)
         inputMail.classList.add("is-invalid");
         inputPassword.classList.add("is-invalid");
     }
+*/
