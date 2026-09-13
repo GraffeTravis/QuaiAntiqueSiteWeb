@@ -26,7 +26,7 @@ let requestOptions = {
 fetch(apiUrl + "login", requestOptions)
     .then(response => {
         if (!response.ok) {
-            throw new Error("Identifiants incorrects");
+            throw new Error("Identifiants incorrects, veuillez réessayer.");
         }
 
         return response.json();
