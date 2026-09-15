@@ -1,0 +1,131 @@
+<div class="hero-scene text-center text-white">
+    <div class="hero-scene-content">
+        <h1>Administration</h1>
+    </div>
+</div>
+
+<div class="container my-4">
+    <div id="adminMessage"></div>
+
+    <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurantPanel" type="button" role="tab">Restaurant</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categoriesPanel" type="button" role="tab">Catégories</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="foods-tab" data-bs-toggle="tab" data-bs-target="#foodsPanel" type="button" role="tab">Plats</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="menus-tab" data-bs-toggle="tab" data-bs-target="#menusPanel" type="button" role="tab">Menus</button>
+        </li>
+    </ul>
+
+    <div class="tab-content border border-top-0 p-3" id="adminTabsContent">
+        <section class="tab-pane fade show active" id="restaurantPanel" role="tabpanel">
+            <form id="restaurantForm" class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label for="restaurantName" class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="restaurantName" required>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="restaurantMaxGuest" class="form-label">Capacité maximale</label>
+                    <input type="number" min="1" class="form-control" id="restaurantMaxGuest" required>
+                </div>
+                <div class="col-12">
+                    <label for="restaurantDescription" class="form-label">Description</label>
+                    <textarea class="form-control" id="restaurantDescription" rows="3" required></textarea>
+                </div>
+                <div class="col-6 col-md-3">
+                    <label for="amOpeningStart" class="form-label">Midi début</label>
+                    <input type="time" class="form-control" id="amOpeningStart">
+                </div>
+                <div class="col-6 col-md-3">
+                    <label for="amOpeningEnd" class="form-label">Midi fin</label>
+                    <input type="time" class="form-control" id="amOpeningEnd">
+                </div>
+                <div class="col-6 col-md-3">
+                    <label for="pmOpeningStart" class="form-label">Soir début</label>
+                    <input type="time" class="form-control" id="pmOpeningStart">
+                </div>
+                <div class="col-6 col-md-3">
+                    <label for="pmOpeningEnd" class="form-label">Soir fin</label>
+                    <input type="time" class="form-control" id="pmOpeningEnd">
+                </div>
+                <div class="col-12 text-end">
+                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="tab-pane fade" id="categoriesPanel" role="tabpanel">
+            <form id="categoryForm" class="row g-3 mb-4">
+                <input type="hidden" id="categoryId">
+                <div class="col-12 col-md-8">
+                    <label for="categoryTitle" class="form-label">Titre</label>
+                    <input type="text" class="form-control" id="categoryTitle" required>
+                </div>
+                <div class="col-12 col-md-4 d-flex align-items-end gap-2">
+                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                    <button class="btn btn-secondary" type="button" id="resetCategoryForm">Annuler</button>
+                </div>
+            </form>
+            <div id="categoriesList" class="d-grid gap-2"></div>
+        </section>
+
+        <section class="tab-pane fade" id="foodsPanel" role="tabpanel">
+            <form id="foodForm" class="row g-3 mb-4">
+                <input type="hidden" id="foodId">
+                <div class="col-12 col-md-6">
+                    <label for="foodTitle" class="form-label">Titre</label>
+                    <input type="text" class="form-control" id="foodTitle" required>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label for="foodPrice" class="form-label">Prix</label>
+                    <input type="number" min="0" class="form-control" id="foodPrice" required>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label for="foodCategories" class="form-label">Catégories</label>
+                    <select class="form-select" id="foodCategories" multiple></select>
+                </div>
+                <div class="col-12">
+                    <label for="foodDescription" class="form-label">Description</label>
+                    <textarea class="form-control" id="foodDescription" rows="3" required></textarea>
+                </div>
+                <div class="col-12 text-end">
+                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                    <button class="btn btn-secondary" type="button" id="resetFoodForm">Annuler</button>
+                </div>
+            </form>
+            <div id="foodsAdminList" class="d-grid gap-2"></div>
+        </section>
+
+        <section class="tab-pane fade" id="menusPanel" role="tabpanel">
+            <form id="menuForm" class="row g-3 mb-4">
+                <input type="hidden" id="menuId">
+                <div class="col-12 col-md-6">
+                    <label for="menuTitle" class="form-label">Titre</label>
+                    <input type="text" class="form-control" id="menuTitle" required>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label for="menuPrice" class="form-label">Prix</label>
+                    <input type="number" min="0" class="form-control" id="menuPrice" required>
+                </div>
+                <div class="col-12 col-md-3">
+                    <label for="menuCategories" class="form-label">Catégories</label>
+                    <select class="form-select" id="menuCategories" multiple></select>
+                </div>
+                <div class="col-12">
+                    <label for="menuDescription" class="form-label">Description</label>
+                    <textarea class="form-control" id="menuDescription" rows="3" required></textarea>
+                </div>
+                <div class="col-12 text-end">
+                    <button class="btn btn-primary" type="submit">Enregistrer</button>
+                    <button class="btn btn-secondary" type="button" id="resetMenuForm">Annuler</button>
+                </div>
+            </form>
+            <div id="menusAdminList" class="d-grid gap-2"></div>
+        </section>
+    </div>
+</div>
