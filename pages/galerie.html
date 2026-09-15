@@ -27,7 +27,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form id="pictureForm">
+            <input type="hidden" id="PictureIdInput">
             <div class="mb-3 mt-3">
                 <label for="NamePhotoInput" class="form-label">Titre</label>
                 <input type="text" class="form-control" id="NamePhotoInput" placeholder="pâtes au charbon">
@@ -35,6 +36,9 @@
             <div class="mb-3">
                 <label for="ImageInput" class="form-label">Image</label>
                 <input type="file" class="form-control" id="ImageInput">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
         </form>
       </div>
@@ -53,11 +57,11 @@
       <div class="modal-body">
         <form>
             <div class="mb-3 mt-3">
-                <p>Titre</p>
-                <img src="../images/plat2.jpg" alt="Plat 1" class="b-round w-100">
+                <p id="DeletePhotoTitle">Titre</p>
+                <img id="DeletePhotoImage" src="../images/plat2.jpg" alt="Plat 1" class="b-round w-100">
             </div>
             <div class="mb-3 text-center">
-                <button type="button" class="btn btn-danger">Supprimer</button>
+                <button type="button" class="btn btn-danger" id="confirmDeletePictureBtn">Supprimer</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
             </div>
         </form>
