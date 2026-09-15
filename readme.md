@@ -257,10 +257,11 @@ X-AUTH-TOKEN: <token>
 L'URL de l'API est centralisée dans le script principal :
 
 ```javascript
-const apiUrl = "http://127.0.0.1:8000/api/";
+const localApiUrl = "http://127.0.0.1:8000/api/";
+const productionApiUrl = "https://quai-antique-api-21f25094150b.herokuapp.com/api/";
 ```
 
-Cette configuration est adaptée au développement local mais doit être remplacée par une configuration adaptée à l'environnement de production lors du déploiement.
+Le front-end utilise automatiquement l'API locale quand il est ouvert depuis `localhost` ou `127.0.0.1`, et l'API Heroku lorsqu'il est déployé en production.
 
 ## Authentification côté front-end
 
@@ -334,12 +335,11 @@ js/script.js
 Configuration actuelle :
 
 ```javascript
-const apiUrl = "http://127.0.0.1:8000/api/";
+const localApiUrl = "http://127.0.0.1:8000/api/";
+const productionApiUrl = "https://quai-antique-api-21f25094150b.herokuapp.com/api/";
 ```
 
-Si l'API fonctionne sur une autre adresse, cette valeur doit être adaptée.
-
-Pour la production, cette configuration devra être externalisée afin de pouvoir utiliser une URL différente sans modifier le code applicatif.
+Si l'API de production change d'adresse, la valeur `productionApiUrl` doit être mise à jour.
 
 ### 4. Lancer le front-end
 
@@ -425,7 +425,7 @@ API REST Symfony
 PostgreSQL
 ```
 
-Le front-end doit donc être configuré avec l'URL publique de l'API avant le déploiement.
+Le front-end est configuré avec l'URL publique de l'API Heroku.
 
 L'environnement de production doit notamment respecter les principes suivants :
 
@@ -475,13 +475,14 @@ Le projet est actuellement fonctionnel autour d'une architecture front-end lég�
 
 ### Configuration de l'API
 
-L'URL de l'API est actuellement codée pour l'environnement local :
+Le front-end distingue l'API locale et l'API de production :
 
 ```javascript
-const apiUrl = "http://127.0.0.1:8000/api/";
+const localApiUrl = "http://127.0.0.1:8000/api/";
+const productionApiUrl = "https://quai-antique-api-21f25094150b.herokuapp.com/api/";
 ```
 
-Elle devra être remplacée par une configuration permettant de distinguer développement et production.
+Cette configuration reste simple et adaptée au projet ECF. Pour une application plus avancée, elle pourrait être remplacée par une variable d'environnement injectée au build.
 
 ### Authentification
 

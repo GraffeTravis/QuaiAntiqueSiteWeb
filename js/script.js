@@ -1,7 +1,11 @@
 const tokenCookieName = "accesstoken";
 const RoleCookieName = "role";
 const signoutBtn = document.getElementById("signout-btn");
-const apiUrl = "http://127.0.0.1:8000/api/";
+const localApiUrl = "http://127.0.0.1:8000/api/";
+const productionApiUrl = "https://quai-antique-api-21f25094150b.herokuapp.com/api/";
+const apiUrl = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+    ? localApiUrl
+    : productionApiUrl;
 
 if (signoutBtn) {
     signoutBtn.addEventListener("click", signout);
