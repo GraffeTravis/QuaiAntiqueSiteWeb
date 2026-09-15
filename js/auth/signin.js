@@ -1,3 +1,7 @@
+const apiUrl = window.apiUrl;
+const setToken = window.setToken;
+const setCookie = window.setCookie;
+const RoleCookieName = window.RoleCookieName;
 const inputMail = document.getElementById("MailInput");
 const inputPassword = document.getElementById("PasswordInput");
 const btnSignin = document.getElementById("btnSignin");
@@ -33,7 +37,8 @@ fetch(apiUrl + "login", requestOptions)
     })
     .then(result => {
         setToken(result.apiToken);
-        setCookie(RoleCookieName, result.roles[0], 7);
+        const role = result.roles.includes("ROLE_ADMIN") ? "admin" : "client";
+        setCookie(RoleCookieName, role, 7);
         window.location.replace("/");
     })
     .catch(error => {

@@ -21,6 +21,17 @@
                 </div>
         </div>
         <div class="mb-3">
+            <label for="NbConvivesInput" class="form-label">Nombre de convives habituel</label>
+            <input type="number" min="1" class="form-control" id="NbConvivesInput" placeholder="Combien vous êtes habituellement ?" name="NbConvives">
+                <div class="invalid-feedback">
+                    Le nombre de convives doit être supérieur à 0
+                </div>
+        </div>
+        <div class="mb-3">
+            <label for="AllergieInput" class="form-label">Allergies</label>
+            <input type="text" class="form-control" id="AllergieInput" placeholder="Fruits de mer, arachides..." name="Allergies">
+        </div>
+        <div class="mb-3">
             <label for="MailInput" class="form-label">Email</label>
             <input type="email" class="form-control" id="MailInput" placeholder="test@mail.fr" name="Mail"> 
                 <div class="invalid-feedback">

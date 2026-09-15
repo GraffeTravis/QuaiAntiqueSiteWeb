@@ -3,10 +3,24 @@ const RoleCookieName = "role";
 const signoutBtn = document.getElementById("signout-btn");
 const apiUrl = "http://127.0.0.1:8000/api/";
 
-signoutBtn.addEventListener("click", signout);
+if (signoutBtn) {
+    signoutBtn.addEventListener("click", signout);
+}
 
 function getRole(){
-    return getCookie(RoleCookieName);
+    return normalizeRole(getCookie(RoleCookieName));
+}
+
+function normalizeRole(role){
+    if(role === "ROLE_ADMIN"){
+        return "admin";
+    }
+
+    if(role === "ROLE_USER"){
+        return "client";
+    }
+
+    return role;
 }
 
 function signout(){
@@ -30,7 +44,7 @@ function setCookie(name,value,days){
         date.setTime(date.getTime() + (days*24*60*60*1000));
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    document.cookie = name + "=" + encodeURIComponent(value || "")  + expires + "; path=/";
 }
 
 function getCookie(name) {
@@ -39,7 +53,7 @@ function getCookie(name) {
     for(const element of ca) {
         let c = element;
         while (c.startsWith(' ')) c = c.substring(1,c.length);
-        if (c.startsWith(nameEQ)) return c.substring(nameEQ.length,c.length);
+        if (c.startsWith(nameEQ)) return decodeURIComponent(c.substring(nameEQ.length,c.length));
     }
     return null;
 }
@@ -108,6 +122,34 @@ function sanitizeHtml(text){
     return tempHtml.innerHTML;
 }
 
+function getAuthHeaders(){
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const token = getToken();
+    if(token){
+        myHeaders.append("X-AUTH-TOKEN", token);
+    }
+
+    return myHeaders;
+}
+
+function apiAssetUrl(path){
+    if(!path){
+        return "";
+    }
+
+    if(path.startsWith("http")){
+        return path;
+    }
+
+    if(path.startsWith("/images/")){
+        return path;
+    }
+
+    return apiUrl.replace("/api/", "") + path;
+}
+
 function getInfosUser(){
     let myHeaders = new Headers();
     myHeaders.append("X-AUTH-TOKEN", getToken());
@@ -134,3 +176,19 @@ function getInfosUser(){
         console.error("erreur lors de la récupération des données utilisateur", error);
     });
 }
+
+window.apiUrl = apiUrl;
+window.tokenCookieName = tokenCookieName;
+window.RoleCookieName = RoleCookieName;
+window.getRole = getRole;
+window.signout = signout;
+window.setToken = setToken;
+window.getToken = getToken;
+window.setCookie = setCookie;
+window.getCookie = getCookie;
+window.eraseCookie = eraseCookie;
+window.isConnected = isConnected;
+window.showAndHideElementsForRoles = showAndHideElementsForRoles;
+window.sanitizeHtml = sanitizeHtml;
+window.getAuthHeaders = getAuthHeaders;
+window.apiAssetUrl = apiAssetUrl;
