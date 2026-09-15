@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "node dev-server.mjs"
+    "dev": "node dev-server.mjs",
+    "check": "node scripts/check-syntax.mjs"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
