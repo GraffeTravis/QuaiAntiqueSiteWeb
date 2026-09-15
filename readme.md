@@ -94,6 +94,7 @@ La structure actuelle du projet est organisée autour des pages, des scripts Jav
 │   └── home.html
 │
 ├── scripts/
+│   ├── check-routes.mjs
 │   └── check-syntax.mjs
 │
 ├── scss/
@@ -402,7 +403,7 @@ Un contrôle de syntaxe JavaScript est disponible avec :
 npm run check
 ```
 
-Cette commande vérifie les scripts du routeur, des pages et du serveur local.
+Cette commande vérifie les scripts du routeur, des pages et du serveur local. Elle vérifie aussi que chaque route déclarée pointe vers des fichiers existants.
 
 ## Déploiement
 
