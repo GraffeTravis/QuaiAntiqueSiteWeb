@@ -80,20 +80,28 @@ La structure actuelle du projet est organisée autour des pages, des scripts Jav
 │   ├── reservations/
 │   │   ├── allResa.js
 │   │   └── reserver.js
+│   ├── admin.js
 │   ├── galerie.js
+│   ├── lacarte.js
 │   └── script.js
 │
 ├── pages/
 │   ├── auth/
 │   ├── reservations/
+│   ├── admin.html
 │   ├── galerie.html
+│   ├── lacarte.html
 │   └── home.html
+│
+├── scripts/
+│   └── check-syntax.mjs
 │
 ├── scss/
 │   ├── main.scss
 │   └── custom.scss
 │
 ├── images/
+├── dev-server.mjs
 ├── index.html
 ├── package.json
 └── package-lock.json
@@ -131,13 +139,15 @@ Les routes actuellement déclarées comprennent notamment :
 
 ```text
 /
- /galerie
- /signin
- /signup
- /account
- /editPassword
- /allResa
- /reserver
+/galerie
+/lacarte
+/signin
+/signup
+/account
+/editPassword
+/allresa
+/reserver
+/admin
 ```
 
 Les routes d'authentification et de réservation sont associées à des règles d'accès selon l'état ou le rôle de l'utilisateur.
@@ -334,7 +344,19 @@ Pour la production, cette configuration devra être externalisée afin de pouvoi
 
 Le projet étant composé de fichiers HTML, JavaScript et SCSS, il est recommandé d'utiliser un serveur HTTP local plutôt que d'ouvrir directement `index.html` avec `file://`.
 
-Par exemple, avec une extension de serveur local dans un éditeur de code ou avec un serveur HTTP adapté.
+Le projet fournit un serveur local adapté au routeur :
+
+```bash
+npm run dev
+```
+
+Le front-end est ensuite disponible sur :
+
+```text
+http://127.0.0.1:5500
+```
+
+Ce serveur permet aussi d'ouvrir directement les routes internes comme `/galerie`, `/lacarte`, `/reserver` ou `/admin`.
 
 ## Développement
 
@@ -371,6 +393,16 @@ images/
 ```
 
 pour les ressources graphiques.
+
+## Vérification technique
+
+Un contrôle de syntaxe JavaScript est disponible avec :
+
+```bash
+npm run check
+```
+
+Cette commande vérifie les scripts du routeur, des pages et du serveur local.
 
 ## Déploiement
 
