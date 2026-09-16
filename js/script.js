@@ -89,6 +89,8 @@ function showAndHideElementsForRoles(){
     let allElementsToEdit = document.querySelectorAll('[data-show]');
 
     allElementsToEdit.forEach(element =>{
+        element.classList.remove("d-none");
+
         switch(element.dataset.show){
             case 'disconnected': 
                 if(userConnected){

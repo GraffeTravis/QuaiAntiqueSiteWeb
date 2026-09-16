@@ -48,7 +48,7 @@ function renderPictures(pictures){
     }
 
     galerieImage.innerHTML = pictures.map((picture) => `
-        <div class="col p-3">
+        <div class="col">
             <div class="image-card text-white">
                 <img src="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}" alt="${sanitizeHtml(picture.title)}" class="b-round w-100" onerror="this.src='/images/plat1.jpg'">
                 <p class="titre-image">${sanitizeHtml(picture.title)}</p>

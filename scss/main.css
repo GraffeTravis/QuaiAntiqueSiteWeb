@@ -12043,7 +12043,15 @@ p {
 
 .image-card {
   position: relative;
-  max-width: 420px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #292222;
+}
+.image-card::before {
+  content: "";
+  display: block;
+  padding-top: 75%;
 }
 .image-card:hover .titre-image, .image-card:hover .action-image-buttons {
   opacity: 1;
@@ -12052,9 +12060,15 @@ p {
   filter: brightness(0.3);
 }
 .image-card img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center;
+     object-position: center;
   transition: all 0.3s;
 }
 .image-card .titre-image {
@@ -12062,6 +12076,10 @@ p {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 100%;
+  padding: 0 1rem;
+  text-align: center;
+  font-weight: 600;
   opacity: 0;
   transition: all 0.3s;
 }
