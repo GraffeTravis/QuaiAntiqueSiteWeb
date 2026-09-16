@@ -50,7 +50,7 @@ function renderPictures(pictures){
     galerieImage.innerHTML = pictures.map((picture) => `
         <div class="col">
             <div class="image-card text-white">
-                <img src="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}" alt="${sanitizeHtml(picture.title)}" class="b-round w-100" onerror="this.src='/images/plat1.jpg'">
+                <img src="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}" alt="${sanitizeHtml(picture.title)}" class="b-round w-100">
                 <p class="titre-image">${sanitizeHtml(picture.title)}</p>
                 <div class="action-image-buttons" data-show="admin">
                     <button type="button" class="btn btn-outline-light" data-edit-picture="${Number(picture.id)}" data-title="${sanitizeHtml(picture.title)}" data-bs-toggle="modal" data-bs-target="#EditionPhotomodal"><i class="bi bi-pencil-square"></i></button>
