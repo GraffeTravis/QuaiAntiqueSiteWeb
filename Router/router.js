@@ -34,18 +34,25 @@ const LoadContentPage = async () => {
     if(allRolesArray.includes("disconnected")){
       if(isConnected()){
         window.location.replace("/");
+        return;
       }
     }
     else{
+      if(!isConnected()){
+        window.location.replace(`/signin?redirect=${encodeURIComponent(path)}`);
+        return;
+      }
+
       const roleUser = getRole();
       if(!allRolesArray.includes(roleUser)){
         window.location.replace("/");
+        return;
       }
     }
   }
 
   // Récupération du contenu HTML de la route
-  const html = await fetch(actualRoute.pathHtml).then((data) => data.text());
+  const html = await fetch(actualRoute.pathHtml + "?v=" + Date.now()).then((data) => data.text());
   // Ajout du contenu HTML à l'élément avec l'ID "main-page"
   document.getElementById("main-page").innerHTML = html;
 

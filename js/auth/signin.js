@@ -39,11 +39,24 @@ fetch(apiUrl + "login", requestOptions)
         setToken(result.apiToken);
         const role = result.roles.includes("ROLE_ADMIN") ? "admin" : "client";
         setCookie(RoleCookieName, role, 7);
-        window.location.replace("/");
+        window.location.replace(getRedirectPath());
     })
     .catch(error => {
         alert(error.message);
     });
   }
 
+function getRedirectPath(){
+    const redirectPath = new URLSearchParams(window.location.search).get("redirect");
+
+    if(!redirectPath || !redirectPath.startsWith("/") || redirectPath.startsWith("//")){
+        return "/";
+    }
+
+    if(["/signin", "/signup"].includes(redirectPath)){
+        return "/";
+    }
+
+    return redirectPath;
+}
 
