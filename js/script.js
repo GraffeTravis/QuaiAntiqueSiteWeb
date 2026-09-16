@@ -145,7 +145,7 @@ function apiAssetUrl(path){
         return "";
     }
 
-    if(path.startsWith("http")){
+    if(path.startsWith("http") || path.startsWith("data:")){
         return path;
     }
 

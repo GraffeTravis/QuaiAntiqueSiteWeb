@@ -1,6 +1,7 @@
 const apiUrl = window.apiUrl;
 const getAuthHeaders = window.getAuthHeaders;
 const sanitizeHtml = window.sanitizeHtml;
+const apiAssetUrl = window.apiAssetUrl;
 const adminMessage = document.getElementById("adminMessage");
 const restaurantId = 1;
 
@@ -37,14 +38,22 @@ const menuCategories = document.getElementById("menuCategories");
 const menusAdminList = document.getElementById("menusAdminList");
 const resetMenuForm = document.getElementById("resetMenuForm");
 
+const adminPictureForm = document.getElementById("adminPictureForm");
+const adminPictureTitle = document.getElementById("adminPictureTitle");
+const adminPictureFile = document.getElementById("adminPictureFile");
+const adminPictureSubmit = document.getElementById("adminPictureSubmit");
+const picturesAdminList = document.getElementById("picturesAdminList");
+
 let categories = [];
 let foods = [];
 let menus = [];
+let pictures = [];
 
 restaurantForm.addEventListener("submit", saveRestaurant);
 categoryForm.addEventListener("submit", saveCategory);
 foodForm.addEventListener("submit", saveFood);
 menuForm.addEventListener("submit", saveMenu);
+adminPictureForm.addEventListener("submit", savePicture);
 resetCategoryForm.addEventListener("click", resetCategory);
 resetFoodForm.addEventListener("click", resetFood);
 resetMenuForm.addEventListener("click", resetMenu);
@@ -57,7 +66,8 @@ async function loadAdmin(){
             loadRestaurant(),
             loadCategories(),
             loadFoods(),
-            loadMenus()
+            loadMenus(),
+            loadPictures()
         ]);
     }
     catch(error) {
@@ -94,6 +104,12 @@ async function loadMenus(){
     const data = await requestJson("menus");
     menus = data.menus || [];
     renderMenus();
+}
+
+async function loadPictures(){
+    const data = await requestJson(`restaurants/${restaurantId}/pictures`);
+    pictures = data.pictures || [];
+    renderPictures();
 }
 
 async function saveRestaurant(event){
@@ -154,6 +170,30 @@ async function saveMenu(event){
     resetMenu();
     await loadMenus();
     showMessage("Menu enregistré.", "success");
+}
+
+async function savePicture(event){
+    event.preventDefault();
+
+    if(!adminPictureFile.files[0]){
+        showMessage("Veuillez sélectionner une image.", "warning");
+        return;
+    }
+
+    adminPictureSubmit.disabled = true;
+
+    try {
+        await submitPicture();
+        adminPictureForm.reset();
+        await loadPictures();
+        showMessage("Image ajoutée à la galerie.", "success");
+    }
+    catch(error) {
+        showMessage(error.message, "danger");
+    }
+    finally {
+        adminPictureSubmit.disabled = false;
+    }
 }
 
 function renderCategories(){
@@ -225,6 +265,32 @@ function renderMenus(){
     bindListActions("menu");
 }
 
+function renderPictures(){
+    if(pictures.length === 0){
+        picturesAdminList.innerHTML = `<p>Aucune image dans la galerie.</p>`;
+        return;
+    }
+
+    picturesAdminList.innerHTML = pictures.map((picture) => `
+        <div class="col">
+            <article class="border rounded p-2 h-100">
+                <div class="image-card text-white mb-2">
+                    <img src="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}" alt="${sanitizeHtml(picture.title)}" onerror="this.src='/images/plat1.jpg'">
+                    <p class="titre-image">${sanitizeHtml(picture.title)}</p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center gap-2">
+                    <strong>${sanitizeHtml(picture.title)}</strong>
+                    <button type="button" class="btn btn-sm btn-danger" data-delete-picture="${Number(picture.id)}">Supprimer</button>
+                </div>
+            </article>
+        </div>
+    `).join("");
+
+    document.querySelectorAll("[data-delete-picture]").forEach((button) => {
+        button.addEventListener("click", () => deletePicture(Number(button.dataset.deletePicture)));
+    });
+}
+
 function bindListActions(type){
     document.querySelectorAll(`[data-edit-${type}]`).forEach((button) => {
         button.addEventListener("click", () => editItem(type, Number(button.dataset[`edit${capitalize(type)}`])));
@@ -288,6 +354,45 @@ async function deleteItem(type, id){
     }
 
     showMessage("Élément supprimé.", "success");
+}
+
+async function deletePicture(id){
+    if(!confirm("Supprimer cette image de la galerie ?")){
+        return;
+    }
+
+    try {
+        await requestJson(`restaurants/${restaurantId}/pictures/${id}`, {
+            method: "DELETE",
+            headers: getAuthHeaders()
+        });
+
+        await loadPictures();
+        showMessage("Image supprimée de la galerie.", "success");
+    }
+    catch(error) {
+        showMessage(error.message, "danger");
+    }
+}
+
+async function submitPicture(){
+    const formData = new FormData();
+    formData.append("title", adminPictureTitle.value);
+    formData.append("imageFile", adminPictureFile.files[0]);
+
+    const response = await fetch(apiUrl + `restaurants/${restaurantId}/pictures`, {
+        method: "POST",
+        headers: new Headers({ "X-AUTH-TOKEN": window.getToken() }),
+        body: formData
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if(!response.ok){
+        throw new Error(data?.message || "L'ajout de l'image a échoué.");
+    }
+
+    return data;
 }
 
 function renderCategoryOptions(select, selectedIds = []){

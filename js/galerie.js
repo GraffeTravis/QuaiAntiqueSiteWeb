@@ -87,6 +87,11 @@ async function savePicture(event){
         return;
     }
 
+    if(!pictureIdInput.value && !imageInput.files[0]){
+        alert("Veuillez sélectionner une image.");
+        return;
+    }
+
     try {
         const pictureId = pictureIdInput.value;
         const requestOptions = pictureId ? {
@@ -139,7 +144,8 @@ async function deletePicture(){
         });
 
         if(!response.ok){
-            throw new Error("La suppression de la photo a échoué.");
+            const error = await response.json().catch(() => null);
+            throw new Error(error?.message || "La suppression de la photo a échoué.");
         }
 
         hideBootstrapModal(deletePhotoModal);
