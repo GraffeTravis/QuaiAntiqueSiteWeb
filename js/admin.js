@@ -49,36 +49,7 @@ resetCategoryForm.addEventListener("click", resetCategory);
 resetFoodForm.addEventListener("click", resetFood);
 resetMenuForm.addEventListener("click", resetMenu);
 
-setupAdminTabs();
 loadAdmin();
-
-function setupAdminTabs(){
-    const tabButtons = Array.from(document.querySelectorAll("#adminTabs [data-bs-target]"));
-    const tabPanels = Array.from(document.querySelectorAll("#adminTabsContent .tab-pane"));
-
-    tabButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const targetPanel = document.querySelector(button.dataset.bsTarget);
-
-            if(!targetPanel){
-                return;
-            }
-
-            tabButtons.forEach((tabButton) => {
-                tabButton.classList.remove("active");
-                tabButton.setAttribute("aria-selected", "false");
-            });
-
-            tabPanels.forEach((panel) => {
-                panel.classList.remove("show", "active");
-            });
-
-            button.classList.add("active");
-            button.setAttribute("aria-selected", "true");
-            targetPanel.classList.add("show", "active");
-        });
-    });
-}
 
 async function loadAdmin(){
     try {

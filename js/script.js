@@ -11,29 +11,6 @@ if (signoutBtn) {
     signoutBtn.addEventListener("click", signout);
 }
 
-setupNavbarToggle();
-
-function setupNavbarToggle(){
-    const navbarToggler = document.querySelector(".navbar-toggler");
-    const navbarCollapse = document.getElementById("navbarSupportedContent");
-
-    if(!navbarToggler || !navbarCollapse){
-        return;
-    }
-
-    navbarToggler.addEventListener("click", () => {
-        const isOpen = navbarCollapse.classList.toggle("show");
-        navbarToggler.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    });
-
-    navbarCollapse.querySelectorAll("a, button").forEach((item) => {
-        item.addEventListener("click", () => {
-            navbarCollapse.classList.remove("show");
-            navbarToggler.setAttribute("aria-expanded", "false");
-        });
-    });
-}
-
 function getRole(){
     return normalizeRole(getCookie(RoleCookieName));
 }

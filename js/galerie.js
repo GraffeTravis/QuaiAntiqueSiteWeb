@@ -14,51 +14,15 @@ const deleteImage = document.getElementById("DeletePhotoImage");
 const confirmDeletePictureBtn = document.getElementById("confirmDeletePictureBtn");
 const editionPhotoModal = document.getElementById("EditionPhotomodal");
 const deletePhotoModal = document.getElementById("DeletePhotomodal");
+const addPictureBtn = document.querySelector("[data-bs-target='#EditionPhotomodal']");
 const restaurantId = 1;
 let selectedPictureId = null;
 
-setupGalleryModals();
+addPictureBtn?.addEventListener("click", resetPictureForm);
 loadPictures();
 pictureForm.addEventListener("submit", savePicture);
 confirmDeletePictureBtn.addEventListener("click", deletePicture);
-
-function setupGalleryModals(){
-    document.querySelectorAll("[data-bs-toggle='modal']").forEach((button) => {
-        button.addEventListener("click", () => {
-            const modal = document.querySelector(button.dataset.bsTarget);
-
-            if(modal === editionPhotoModal && !button.dataset.editPicture){
-                resetPictureForm();
-            }
-
-            openModal(modal);
-        });
-    });
-
-    document.querySelectorAll("[data-bs-dismiss='modal']").forEach((button) => {
-        button.addEventListener("click", () => {
-            closeModal(button.closest(".modal"));
-        });
-    });
-
-    [editionPhotoModal, deletePhotoModal].forEach((modal) => {
-        modal?.addEventListener("click", (event) => {
-            if(event.target === modal){
-                closeModal(modal);
-            }
-        });
-    });
-
-    document.addEventListener("keydown", (event) => {
-        if(event.key !== "Escape"){
-            return;
-        }
-
-        document.querySelectorAll(".modal.show").forEach(closeModal);
-    });
-
-    showAndHideElementsForRoles();
-}
+showAndHideElementsForRoles();
 
 async function loadPictures(){
     try {
@@ -89,8 +53,8 @@ function renderPictures(pictures){
                 <img src="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}" alt="${sanitizeHtml(picture.title)}" class="b-round w-100" onerror="this.src='/images/plat1.jpg'">
                 <p class="titre-image">${sanitizeHtml(picture.title)}</p>
                 <div class="action-image-buttons" data-show="admin">
-                    <button type="button" class="btn btn-outline-light" data-edit-picture="${Number(picture.id)}" data-title="${sanitizeHtml(picture.title)}"><i class="bi bi-pencil-square"></i></button>
-                    <button type="button" class="btn btn-outline-light" data-delete-picture="${Number(picture.id)}" data-title="${sanitizeHtml(picture.title)}" data-image="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}"><i class="bi bi-trash"></i></button>
+                    <button type="button" class="btn btn-outline-light" data-edit-picture="${Number(picture.id)}" data-title="${sanitizeHtml(picture.title)}" data-bs-toggle="modal" data-bs-target="#EditionPhotomodal"><i class="bi bi-pencil-square"></i></button>
+                    <button type="button" class="btn btn-outline-light" data-delete-picture="${Number(picture.id)}" data-title="${sanitizeHtml(picture.title)}" data-image="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}" data-bs-toggle="modal" data-bs-target="#DeletePhotomodal"><i class="bi bi-trash"></i></button>
                 </div>
             </div>
         </div>
@@ -101,7 +65,6 @@ function renderPictures(pictures){
             pictureIdInput.value = button.dataset.editPicture;
             titleInput.value = button.dataset.title;
             imageInput.value = "";
-            openModal(editionPhotoModal);
         });
     });
 
@@ -110,7 +73,6 @@ function renderPictures(pictures){
             selectedPictureId = button.dataset.deletePicture;
             deleteTitle.textContent = button.dataset.title;
             deleteImage.src = button.dataset.image;
-            openModal(deletePhotoModal);
         });
     });
 
@@ -145,7 +107,7 @@ async function savePicture(event){
             throw new Error(error?.message || "L'enregistrement de la photo a échoué.");
         }
 
-        closeModal(editionPhotoModal);
+        hideBootstrapModal(editionPhotoModal);
         resetPictureForm();
         loadPictures();
     }
@@ -180,7 +142,7 @@ async function deletePicture(){
             throw new Error("La suppression de la photo a échoué.");
         }
 
-        closeModal(deletePhotoModal);
+        hideBootstrapModal(deletePhotoModal);
         selectedPictureId = null;
         loadPictures();
     }
@@ -202,41 +164,10 @@ function resetPictureForm(){
     pictureIdInput.value = "";
 }
 
-function openModal(modal){
-    if(!modal){
+function hideBootstrapModal(modal){
+    if(!modal || !window.bootstrap){
         return;
     }
 
-    modal.style.display = "block";
-    modal.removeAttribute("aria-hidden");
-    modal.setAttribute("aria-modal", "true");
-    modal.classList.add("show");
-    document.body.classList.add("modal-open");
-    ensureModalBackdrop();
-}
-
-function closeModal(modal){
-    if(!modal){
-        return;
-    }
-
-    modal.classList.remove("show");
-    modal.style.display = "none";
-    modal.setAttribute("aria-hidden", "true");
-    modal.removeAttribute("aria-modal");
-
-    if(!document.querySelector(".modal.show")){
-        document.body.classList.remove("modal-open");
-        document.querySelector(".modal-backdrop")?.remove();
-    }
-}
-
-function ensureModalBackdrop(){
-    if(document.querySelector(".modal-backdrop")){
-        return;
-    }
-
-    const backdrop = document.createElement("div");
-    backdrop.className = "modal-backdrop fade show";
-    document.body.appendChild(backdrop);
+    window.bootstrap.Modal.getInstance(modal)?.hide();
 }
