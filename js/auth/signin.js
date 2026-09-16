@@ -46,17 +46,4 @@ fetch(apiUrl + "login", requestOptions)
     });
   }
 
-  /*  if(inputMail.value == "test@gmail.com" && inputPassword.value == "123") {
-        alert("Vous êtes désormais connecté(test)")
 
-        //Il faudra récupérer le vrai token
-      
-        setToken(token)
-
-        window.location.replace("/");
-    }
-    else{
-        inputMail.classList.add("is-invalid");
-        inputPassword.classList.add("is-invalid");
-    }
-*/
