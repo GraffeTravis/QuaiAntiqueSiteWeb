@@ -180,5 +180,16 @@ function hideBootstrapModal(modal){
         return;
     }
 
-    window.bootstrap.Modal.getInstance(modal)?.hide();
+    const instance = window.bootstrap.Modal.getInstance(modal);
+    if(!instance){
+        return;
+    }
+
+    // Bootstrap ignore hide() while the opening transition is running.
+    const hideAfterOpening = () => instance.hide();
+    modal.addEventListener("shown.bs.modal", hideAfterOpening, { once: true });
+    modal.addEventListener("hidden.bs.modal", () => {
+        modal.removeEventListener("shown.bs.modal", hideAfterOpening);
+    }, { once: true });
+    instance.hide();
 }
