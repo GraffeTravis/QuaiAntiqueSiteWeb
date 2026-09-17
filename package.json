@@ -2,10 +2,14 @@
   "type": "module",
   "scripts": {
     "dev": "node dev-server.mjs",
-    "check": "node scripts/check-syntax.mjs && node scripts/check-routes.mjs"
+    "check": "node scripts/check-syntax.mjs && node scripts/check-routes.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
   }
 }
