@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url("/node_modules/bootstrap-icons/font/bootstrap-icons.css");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css");
 /*!
  * Bootstrap  v5.3.8 (https://getbootstrap.com/)
  * Copyright 2011-2025 The Bootstrap Authors
@@ -12090,6 +12090,18 @@ p {
   right: 10px;
   display: flex;
   justify-content: space-between;
+}
+.image-card .action-image-buttons .btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.image-card .action-image-buttons .bi {
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .type-card {

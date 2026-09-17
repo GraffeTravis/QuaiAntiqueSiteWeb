@@ -53,8 +53,8 @@ function renderPictures(pictures){
                 <img src="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}" alt="${sanitizeHtml(picture.title)}" class="b-round w-100">
                 <p class="titre-image">${sanitizeHtml(picture.title)}</p>
                 <div class="action-image-buttons" data-show="admin">
-                    <button type="button" class="btn btn-outline-light" data-edit-picture="${Number(picture.id)}" data-title="${sanitizeHtml(picture.title)}" data-bs-toggle="modal" data-bs-target="#EditionPhotomodal"><i class="bi bi-pencil-square"></i></button>
-                    <button type="button" class="btn btn-outline-light" data-delete-picture="${Number(picture.id)}" data-title="${sanitizeHtml(picture.title)}" data-image="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}" data-bs-toggle="modal" data-bs-target="#DeletePhotomodal"><i class="bi bi-trash"></i></button>
+                    <button type="button" class="btn btn-outline-light" aria-label="Modifier ${sanitizeHtml(picture.title)}" title="Modifier la photo" data-edit-picture="${Number(picture.id)}" data-title="${sanitizeHtml(picture.title)}" data-bs-toggle="modal" data-bs-target="#EditionPhotomodal"><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-outline-light" aria-label="Supprimer ${sanitizeHtml(picture.title)}" title="Supprimer la photo" data-delete-picture="${Number(picture.id)}" data-title="${sanitizeHtml(picture.title)}" data-image="${sanitizeHtml(apiAssetUrl(picture.imageUrl))}" data-bs-toggle="modal" data-bs-target="#DeletePhotomodal"><i class="bi bi-trash" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
@@ -89,6 +89,11 @@ async function savePicture(event){
 
     if(!pictureIdInput.value && !imageInput.files[0]){
         alert("Veuillez sélectionner une image.");
+        return;
+    }
+
+    if(!pictureIdInput.value && imageInput.files[0].size > 5 * 1024 * 1024){
+        alert("L'image ne doit pas dépasser 5 Mo.");
         return;
     }
 
