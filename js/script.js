@@ -2,7 +2,7 @@ const tokenCookieName = "accesstoken";
 const RoleCookieName = "role";
 const signoutBtn = document.getElementById("signout-btn");
 const localApiUrl = "http://127.0.0.1:8000/api/";
-const productionApiUrl = "https://quai-antique-api-21f25094150b.herokuapp.com/api/";
+const productionApiUrl = "https://api.quaiantique.tech/api/";
 const apiUrl = ["localhost", "127.0.0.1"].includes(window.location.hostname)
     ? localApiUrl
     : productionApiUrl;

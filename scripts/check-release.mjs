@@ -9,7 +9,7 @@ assert(baseURL, "Usage: npm run test:release -- <URL> [--proxy-local-api]");
 const origin = new URL(baseURL).origin;
 const proxyLocalApi = process.argv.includes("--proxy-local-api");
 assert(!proxyLocalApi || new URL(origin).hostname === "127.0.0.1", "Proxy limited to local tests");
-const api = "https://quai-antique-api-21f25094150b.herokuapp.com";
+const api = "https://api.quaiantique.tech";
 const report = { date: new Date().toISOString(), origin, proxyLocalApi, checks: [], errors: [] };
 const output = `test-results/release-${new URL(origin).hostname}`;
 await mkdir(output, { recursive: true });

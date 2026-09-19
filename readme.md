@@ -258,7 +258,7 @@ L'URL de l'API est centralisée dans le script principal :
 
 ```javascript
 const localApiUrl = "http://127.0.0.1:8000/api/";
-const productionApiUrl = "https://quai-antique-api-21f25094150b.herokuapp.com/api/";
+const productionApiUrl = "https://api.quaiantique.tech/api/";
 ```
 
 Le front-end utilise automatiquement l'API locale quand il est ouvert depuis `localhost` ou `127.0.0.1`, et l'API Heroku lorsqu'il est déployé en production.
@@ -336,7 +336,7 @@ Configuration actuelle :
 
 ```javascript
 const localApiUrl = "http://127.0.0.1:8000/api/";
-const productionApiUrl = "https://quai-antique-api-21f25094150b.herokuapp.com/api/";
+const productionApiUrl = "https://api.quaiantique.tech/api/";
 ```
 
 Si l'API de production change d'adresse, la valeur `productionApiUrl` doit être mise à jour.
@@ -479,7 +479,7 @@ Le front-end distingue l'API locale et l'API de production :
 
 ```javascript
 const localApiUrl = "http://127.0.0.1:8000/api/";
-const productionApiUrl = "https://quai-antique-api-21f25094150b.herokuapp.com/api/";
+const productionApiUrl = "https://api.quaiantique.tech/api/";
 ```
 
 Cette configuration reste simple et adaptée au projet ECF. Pour une application plus avancée, elle pourrait être remplacée par une variable d'environnement injectée au build.
