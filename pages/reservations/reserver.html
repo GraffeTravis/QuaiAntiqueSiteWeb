@@ -5,7 +5,7 @@
 </div>
 
 <div class="container mt-4">
-    <div id="reservationMessage"></div>
+    <div id="reservationMessage" aria-live="polite"></div>
     <form id="reservationForm">
         <div class="row">
             <div class="mb-3 col-12 col-md-6">
@@ -33,7 +33,7 @@
             <label for="selectHour" class="form-label">Heure</label>
             <select class="form-select" id="selectHour" name="Heure"></select>
         </div>
-        <div id="availabilityMessage" class="mb-3"></div>
+        <div id="availabilityMessage" class="mb-3" aria-live="polite"></div>
         <div class="text-center">
             <button type="submit" class="btn btn-primary" id="bookingSubmitBtn">Réserver</button>
             <a href="/allresa" class="btn btn-danger">Annuler</a>

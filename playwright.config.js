@@ -10,7 +10,7 @@ export default defineConfig({
     channel: process.env.CI ? undefined : "msedge",
   },
   webServer: {
-    command: "npm run dev",
+    command: "node dev-server.mjs",
     url: "http://127.0.0.1:5512",
     env: { PORT: "5512" },
     reuseExistingServer: !process.env.CI,

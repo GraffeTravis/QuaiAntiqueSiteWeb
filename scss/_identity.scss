@@ -1,0 +1,360 @@
+.identity-section{
+    padding-block: 5rem;
+
+    h2{
+        margin-bottom: 1.5rem;
+        line-height: 1.12;
+    }
+
+    .section-kicker{
+        color: var(--quai-ochre);
+    }
+
+    p{
+        max-width: 42rem;
+    }
+}
+
+.bg-dark{
+    .text-primary,
+    .section-kicker{
+        color: var(--quai-gold) !important;
+    }
+}
+
+.home-hero{
+    .hero-lead{
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 1.8rem;
+        line-height: 1.4;
+        color: #fff;
+    }
+
+    .hero-description{
+        max-width: 34rem;
+        margin: 0.85rem 0 0;
+        color: rgba(255, 255, 255, 0.85);
+    }
+}
+
+.house-introduction{
+    background: var(--quai-paper);
+
+    .container{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: start;
+    }
+}
+
+.identity-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    color: var(--quai-wine);
+    font-weight: 600;
+    text-underline-offset: 0.3em;
+
+    &:hover{
+        color: var(--quai-forest);
+    }
+}
+
+.chef-story{
+    background: #edf1ed;
+}
+
+.chef-layout,
+.visit-layout{
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 4.5rem;
+    align-items: center;
+}
+
+.identity-photo{
+    margin: 0;
+
+    img{
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    figcaption{
+        padding-top: 0.6rem;
+        font-size: 0.82rem;
+        color: var(--quai-muted);
+    }
+}
+
+.chef-copy blockquote{
+    margin: 1.75rem 0;
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--quai-wine);
+
+    p{
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 1.45rem;
+        line-height: 1.5;
+        color: var(--quai-wine);
+        margin-bottom: 0.5rem;
+    }
+
+    cite{
+        font-style: normal;
+        font-size: 0.9rem;
+    }
+}
+
+.house-timeline{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    padding: 1.25rem 0 0;
+    margin: 1.75rem 0 0;
+    border-top: 1px solid #cbd5cd;
+    list-style: none;
+
+    span,
+    strong,
+    small{
+        display: block;
+    }
+
+    span{
+        color: var(--quai-ochre);
+        font-size: 1.25rem;
+        font-family: "Playfair Display", Georgia, serif;
+        margin-bottom: 0.5rem;
+    }
+
+    small{
+        color: var(--quai-muted);
+        margin-top: 0.2rem;
+    }
+}
+
+.territory-section{
+    background: var(--quai-forest);
+    color: var(--quai-paper);
+
+    .section-kicker,
+    .territory-number{
+        color: #d9b77f;
+    }
+}
+
+.territory-heading{
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 2.5rem;
+}
+
+.territory-grid{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+
+    article{
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    h3{
+        margin: 1rem 0;
+        font-size: 1.55rem;
+    }
+
+    p{
+        color: #dce4dd;
+        margin-bottom: 0;
+    }
+}
+
+.home-menus{
+    background: #fff;
+}
+
+.home-menus-layout{
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 5rem;
+    align-items: start;
+}
+
+.home-menu-list{
+    min-height: 14rem;
+}
+
+.home-menu-item{
+    padding-block: 1.75rem;
+    border-top: 1px solid #cbd5cd;
+
+    h3{
+        margin: 0;
+        font-size: 1.6rem;
+    }
+
+    > p{
+        margin-top: 0.75rem;
+        color: var(--quai-muted);
+    }
+}
+
+.home-menu-title{
+    display: flex;
+    justify-content: space-between;
+    gap: 1.25rem;
+    align-items: baseline;
+
+    p{
+        flex-shrink: 0;
+        color: var(--quai-wine);
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+    }
+}
+
+.home-gallery-heading > div{
+    max-width: 42rem;
+}
+
+.gallery-reservation{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-top: 2rem;
+
+    p{
+        margin-bottom: 0;
+    }
+}
+
+.house-visit{
+    background: var(--quai-paper);
+}
+
+.visit-layout{
+    grid-template-columns: 1.1fr 0.9fr;
+}
+
+.visit-details{
+    margin: 1.75rem 0;
+
+    > div{
+        padding: 0.85rem 0;
+        border-top: 1px solid #d4dcd4;
+    }
+
+    dt{
+        color: var(--quai-forest);
+        margin-bottom: 0.25rem;
+    }
+
+    dd{
+        color: var(--quai-muted);
+        margin: 0;
+    }
+}
+
+footer.footer .footer-hours-note{
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+}
+
+@media (max-width: 991.98px){
+    .chef-layout,
+    .visit-layout,
+    .house-introduction .container,
+    .territory-heading,
+    .home-menus-layout{
+        gap: 2.5rem;
+    }
+
+    .territory-grid{
+        gap: 1.5rem;
+    }
+
+    footer.footer .footer-main{
+        grid-template-columns: 1fr 1.4fr;
+        gap: 2rem;
+    }
+
+    footer.footer .footer-about{
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 767.98px){
+    .identity-section{
+        padding-block: 3.5rem;
+    }
+
+    .house-introduction .container,
+    .chef-layout,
+    .visit-layout,
+    .territory-heading,
+    .territory-grid,
+    .home-menus-layout,
+    footer.footer .footer-main{
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .chef-photo img{
+        aspect-ratio: 4 / 3;
+        object-position: center 35%;
+    }
+
+    .room-photo img{
+        aspect-ratio: 4 / 3;
+        object-position: center 70%;
+    }
+
+    .home-hero .hero-scene-content{
+        min-height: min(620px, calc(100svh - 120px));
+        padding-block: 3rem;
+    }
+
+    .home-hero .hero-lead{
+        font-size: 1.45rem;
+    }
+
+    .home-gallery-grid{
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .home-gallery-item{
+        aspect-ratio: 16 / 10;
+    }
+
+    .home-gallery-item:last-child{
+        display: block;
+    }
+
+    .home-menu-title{
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .house-timeline{
+        gap: 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce){
+    .home-gallery-item img{
+        transition: none;
+    }
+}

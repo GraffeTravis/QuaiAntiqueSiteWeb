@@ -147,3 +147,498 @@ p{
         padding:10px;
     }
 }
+
+:root{
+    --quai-ink: #171a16;
+    --quai-forest: #1f352d;
+    --quai-wine: #6f2431;
+    --quai-gold: #c89b4f;
+    --quai-cream: #f0f3ef;
+    --quai-paper: #fbfcfa;
+    --quai-muted: #59645c;
+    --quai-ochre: #805a29;
+    --quai-shadow: 0 24px 60px rgba(23, 26, 22, 0.16);
+}
+
+html{
+    background-color: var(--quai-cream);
+}
+
+body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--quai-ink);
+    background:
+        linear-gradient(180deg, rgba(255, 250, 242, 0.9), rgba(247, 241, 231, 0.92)),
+        var(--quai-cream);
+    font-family: "Hind Madurai", Arial, Helvetica, sans-serif;
+}
+
+main{
+    flex: 1;
+    margin-bottom: 0;
+    min-height: 0;
+}
+
+h1,
+h2,
+h3,
+.navbar-brand{
+    font-family: "Playfair Display", Georgia, serif;
+    letter-spacing: 0;
+}
+
+h1{
+    font-size: 5.5rem;
+    line-height: 0.95;
+}
+
+h2{
+    font-size: 3rem;
+    line-height: 1;
+}
+
+p{
+    color: inherit;
+    font-family: "Hind Madurai", Arial, Helvetica, sans-serif;
+    font-size: 1.08rem;
+    line-height: 1.75;
+}
+
+.text-primary{
+    color: var(--quai-ochre) !important;
+}
+
+.bg-dark{
+    background-color: var(--quai-forest) !important;
+}
+
+.navbar-quai{
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 0.85rem 0;
+    box-shadow: 0 18px 45px rgba(9, 17, 14, 0.16);
+
+    .container-fluid{
+        max-width: 1180px;
+        padding-inline: 1.25rem;
+    }
+
+    .navbar-brand{
+        color: var(--quai-paper);
+        font-size: 1.65rem;
+    }
+
+    .nav-link{
+        color: rgba(255, 250, 242, 0.78);
+        font-weight: 600;
+        padding-inline: 0.85rem;
+
+        &:hover,
+        &.active{
+            color: var(--quai-gold);
+        }
+    }
+}
+
+.btn{
+    min-height: 46px;
+    border-radius: 999px;
+    padding: 0.72rem 1.35rem;
+    font-weight: 700;
+    box-shadow: none;
+}
+
+.btn-primary{
+    border-color: var(--quai-wine);
+    background-color: var(--quai-wine);
+    color: #fff;
+
+    &:hover,
+    &:focus{
+        border-color: #551824;
+        background-color: #551824;
+        color: #fff;
+    }
+}
+
+.btn-outline-light{
+    border-color: rgba(255, 250, 242, 0.72);
+    color: var(--quai-paper);
+
+    &:hover,
+    &:focus{
+        border-color: var(--quai-paper);
+        background-color: var(--quai-paper);
+        color: var(--quai-forest);
+    }
+}
+
+.hero-scene{
+    overflow: hidden;
+    background-color: var(--quai-forest);
+
+    &::before{
+        background-image:
+            linear-gradient(90deg, rgba(18, 24, 19, 0.78), rgba(18, 24, 19, 0.34)),
+            url("../images/FondHeroScene.jpg");
+        filter: none;
+        background-position: center;
+    }
+
+    &::after{
+        content: "";
+        position: absolute;
+        inset: auto 0 0;
+        height: 42%;
+        background: linear-gradient(180deg, rgba(23, 26, 22, 0), rgba(23, 26, 22, 0.38));
+        pointer-events: none;
+    }
+
+    .hero-scene-content{
+        min-height: 360px;
+        height: auto;
+        padding: 5.5rem 1.25rem;
+        z-index: 1;
+    }
+}
+
+.home-hero .hero-scene-content{
+    min-height: min(720px, calc(100vh - 74px));
+    max-width: 920px;
+    margin-inline: auto;
+}
+
+.hero-kicker,
+.section-kicker{
+    margin-bottom: 0.85rem;
+    color: var(--quai-gold);
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.hero-lead{
+    max-width: 660px;
+    margin: 1.25rem auto 0;
+    color: rgba(255, 250, 242, 0.88);
+    font-size: 1.25rem;
+}
+
+.hero-actions{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.9rem;
+    margin-top: 2rem;
+}
+
+.home-intro,
+.home-reservation{
+    background-color: var(--quai-paper);
+}
+
+.home-feature{
+    position: relative;
+}
+
+.feature-image{
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: var(--quai-shadow);
+
+    img{
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+    }
+}
+
+.feature-image-alt img{
+    aspect-ratio: 5 / 4;
+}
+
+.home-gallery-heading,
+.carte-heading{
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
+
+    p:last-child{
+        max-width: 36rem;
+        margin-bottom: 0;
+    }
+}
+
+.home-gallery-grid{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.home-gallery-item{
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    color: #fff;
+    background: #15231d;
+
+    img{
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 250ms ease;
+    }
+
+    span{
+        position: absolute;
+        inset: auto 0 0;
+        padding: 2rem 1rem 0.85rem;
+        background: linear-gradient(transparent, rgba(9, 15, 12, 0.8));
+        font-weight: 600;
+    }
+
+    &:hover img,
+    &:focus-visible img{
+        transform: scale(1.04);
+    }
+}
+
+.carte-section{
+    padding-block: 4rem 5rem;
+    background: var(--quai-paper);
+}
+
+.carte-item{
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border: 1px solid rgba(31, 53, 45, 0.18);
+    border-radius: 8px;
+    background: #fffdf8;
+
+    h3{
+        margin-bottom: 0.75rem;
+    }
+
+    p{
+        margin-bottom: 1.25rem;
+    }
+
+    .carte-price{
+        margin-top: auto;
+        margin-bottom: 0;
+        color: var(--quai-wine);
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+}
+
+.signature-note{
+    color: var(--quai-muted);
+    font-weight: 600;
+}
+
+.reservation-panel{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 1px solid rgba(31, 53, 45, 0.18);
+    border-radius: 8px;
+    background:
+        linear-gradient(90deg, rgba(255, 250, 242, 0.92), rgba(255, 250, 242, 0.7)),
+        url("../images/resteau.jpg") center/cover;
+    box-shadow: var(--quai-shadow);
+}
+
+.b-rounded{
+    border-radius: 8px;
+}
+
+.image-card{
+    border-radius: 8px;
+    box-shadow: 0 18px 40px rgba(23, 26, 22, 0.18);
+
+    .titre-image{
+        font-size: 1.25rem;
+    }
+}
+
+.border-primary{
+    border-color: rgba(200, 155, 79, 0.48) !important;
+}
+
+.form-control,
+.form-select{
+    min-height: 46px;
+    border-color: rgba(31, 53, 45, 0.22);
+    border-radius: 8px;
+    background-color: #fffdf8;
+}
+
+.form-control:focus,
+.form-select:focus{
+    border-color: var(--quai-gold);
+    box-shadow: 0 0 0 0.2rem rgba(200, 155, 79, 0.2);
+}
+
+.modal-content,
+.tab-content{
+    border-radius: 8px;
+}
+
+footer.footer{
+    position: relative;
+    padding: 4rem 0 1.25rem;
+
+    .footer-main{
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.65fr) minmax(0, 1.4fr);
+        gap: 3rem;
+    }
+
+    .footer-brand{
+        color: var(--quai-paper);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 1.8rem;
+        text-decoration: none;
+    }
+
+    .footer-about p{
+        max-width: 20rem;
+        margin: 1rem 0 1.5rem;
+    }
+
+    h2{
+        margin-bottom: 1.25rem;
+        color: var(--quai-gold);
+        font-family: "Hind Madurai", Arial, Helvetica, sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        line-height: 1.4;
+        text-transform: uppercase;
+    }
+
+    .footer-nav a{
+        display: block;
+        width: fit-content;
+        margin-bottom: 0.8rem;
+        color: var(--quai-paper);
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible{
+            color: var(--quai-gold);
+            text-decoration: underline;
+        }
+    }
+
+    .footer-hours dl{
+        margin-bottom: 0;
+    }
+
+    .footer-hours dl > div{
+        display: flex;
+        justify-content: space-between;
+        gap: 1.25rem;
+        padding: 0.3rem 0;
+        border-bottom: 1px solid rgba(255, 250, 242, 0.12);
+    }
+
+    .footer-hours dt{
+        font-weight: 600;
+    }
+
+    .footer-hours dd{
+        margin: 0;
+        color: rgba(255, 250, 242, 0.78);
+        text-align: right;
+    }
+
+    .footer-bottom{
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 3rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(255, 250, 242, 0.18);
+        color: rgba(255, 250, 242, 0.58);
+        font-size: 0.85rem;
+    }
+
+    p{
+        margin-bottom: 0;
+        color: rgba(255, 250, 242, 0.78);
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 767.98px){
+    h1{
+        font-size: 3.25rem;
+    }
+
+    h2{
+        font-size: 2.2rem;
+    }
+
+    .hero-lead{
+        font-size: 1.1rem;
+    }
+
+    .hero-scene .hero-scene-content{
+        min-height: 300px;
+        padding: 4rem 1rem;
+    }
+
+    .home-hero .hero-scene-content{
+        min-height: 620px;
+    }
+
+    .reservation-panel{
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .home-gallery-heading,
+    .carte-heading{
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .home-gallery-grid{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-gallery-item:last-child{
+        display: none;
+    }
+
+    footer.footer{
+        padding-top: 3rem;
+
+        .footer-main{
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+        }
+
+        .footer-bottom{
+            flex-direction: column;
+        }
+    }
+}
+
+@import 'identity';

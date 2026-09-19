@@ -25,6 +25,117 @@ test("navigation, reservation et compte anonyme", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Ajouter une photo" })).toBeHidden();
 });
 
+test("la carte, les menus, la galerie d'accueil et les horaires", async ({ page }) => {
+  await page.route("**/api/restaurants/1/pictures", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({ pictures: [
+      { id: 1, title: "Soupe maison", imageUrl: "/images/gallery-preview/soupe-oignon.jpg" },
+      { id: 2, title: "Poisson du jour", imageUrl: "/images/gallery-preview/filet-poisson.jpg" },
+      { id: 3, title: "Tarte tatin", imageUrl: "/images/gallery-preview/tarte-tatin.jpg" }
+    ] })
+  }));
+  await page.route("**/api/restaurants/1", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({ amOpeningTime: ["12:00", "14:00"], pmOpeningTime: ["19:00", "21:00"] })
+  }));
+  await page.route("**/api/foods", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({ foods: [{ title: "Truite de Savoie", description: "Légumes de saison", price: 24 }] })
+  }));
+  await page.route("**/api/menus", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({ menus: [{ title: "Menu Découverte", description: "Entrée, plat et dessert", price: 47 }] })
+  }));
+
+  await page.goto("/", { waitUntil: "commit" });
+  await expect(page.locator("#homeGallery img")).toHaveCount(3);
+  await expect(page.locator("#homeMenus .home-menu-title p")).toHaveText(/47,00\s*€/);
+  await expect(page.locator(".footer-hours dd[data-service-hours]")).toHaveCount(6);
+  await expect(page.locator(".footer-hours dd[data-service-hours]").first()).toHaveText("12h00–14h00 · 19h00–21h00");
+
+  await page.getByRole("link", { name: "La carte", exact: true }).first().click();
+  await expect(page.getByRole("heading", { name: "La carte", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Truite de Savoie" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Menu Découverte" })).toHaveCount(0);
+
+  await page.getByRole("link", { name: "Menus", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Les menus", level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Menu Découverte" })).toBeVisible();
+  await expect(page.locator("#menusList .carte-price")).toHaveText("47.00 €");
+  await expect(page.getByRole("link", { name: "Menus", exact: true })).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("heading", { name: "Truite de Savoie" })).toHaveCount(0);
+  await page.locator("footer .footer-brand").click();
+  await expect(page.getByRole("heading", { name: "Quai Antique", level: 1 })).toBeVisible();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});
+
+test("les créneaux et le footer suivent les horaires administrés, le lundi reste fermé", async ({ page }) => {
+  await page.addInitScript(() => {
+    document.cookie = "accesstoken=test-client; path=/";
+    document.cookie = "role=client; path=/";
+  });
+  await page.route("**/api/restaurants/1", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({ amOpeningTime: ["11:30", "13:30"], pmOpeningTime: ["18:30", "20:30"] })
+  }));
+  await page.route("**/api/account/me", route => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({ firstName: "Camille", lastName: "Test", guestNumber: 2 })
+  }));
+  let availabilityFails = false;
+  await page.route("**/api/bookings/availability?**", route => route.fulfill({
+    status: availabilityFails ? 503 : 200,
+    contentType: "application/json",
+    body: JSON.stringify({ available: true, remaining: 12 })
+  }));
+
+  await page.goto("/reserver", { waitUntil: "commit" });
+  await expect(page.locator("#selectHour option")).toHaveCount(18);
+  await expect(page.locator("#selectHour option").first()).toHaveText("11:30");
+  await expect(page.locator("#selectHour option").last()).toHaveText("20:30");
+  await expect(page.locator("[data-service-hours]").first()).toHaveText("11h30–13h30 · 18h30–20h30");
+  await page.getByLabel("Date", { exact: true }).fill("2030-01-08");
+  await expect(page.locator("#bookingSubmitBtn")).toBeEnabled();
+  await page.getByLabel("Date", { exact: true }).fill("2030-01-07");
+  await expect(page.locator("#availabilityMessage")).toContainText("fermé le lundi");
+  await expect(page.locator("#bookingSubmitBtn")).toBeDisabled();
+
+  availabilityFails = true;
+  await page.getByLabel("Date", { exact: true }).fill("2030-01-08");
+  await expect(page.locator("#availabilityMessage")).toContainText("Disponibilité impossible à vérifier");
+  await expect(page.locator("#bookingSubmitBtn")).toBeDisabled();
+});
+
+test("les horaires indisponibles ne créent pas de faux créneaux", async ({ page }) => {
+  await page.addInitScript(() => {
+    document.cookie = "accesstoken=test-client; path=/";
+    document.cookie = "role=client; path=/";
+  });
+  await page.route("**/api/restaurants/1", route => route.fulfill({ status: 503, body: "" }));
+  await page.goto("/reserver", { waitUntil: "commit" });
+  await expect(page.locator("#reservationMessage")).toContainText("horaires ne sont pas disponibles");
+  await expect(page.locator("#selectHour")).toBeDisabled();
+  await expect(page.locator("#selectHour option")).toHaveCount(0);
+  await expect(page.locator("#bookingSubmitBtn")).toBeDisabled();
+  await expect(page.locator("#serviceHoursNote")).toBeVisible();
+});
+
+test("l'accueil distingue les menus vides et indisponibles sans inventer de prix", async ({ page }) => {
+  let fails = false;
+  await page.route("**/api/menus", route => route.fulfill({
+    status: fails ? 503 : 200,
+    contentType: "application/json",
+    body: JSON.stringify({ menus: [] })
+  }));
+  await page.goto("/", { waitUntil: "commit" });
+  await expect(page.locator("#homeMenus")).toContainText("Le chef prépare les prochains menus");
+  await expect(page.locator("#homeMenus .home-menu-item")).toHaveCount(0);
+  fails = true;
+  await page.reload({ waitUntil: "commit" });
+  await expect(page.locator("#homeMenus")).toContainText("Les menus ne sont pas disponibles");
+  await expect(page.locator("#homeMenus .home-menu-item")).toHaveCount(0);
+});
+
 test("menu mobile Bootstrap", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/", { waitUntil: "commit" });

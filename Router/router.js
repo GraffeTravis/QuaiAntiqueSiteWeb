@@ -55,6 +55,18 @@ const LoadContentPage = async () => {
   const html = await fetch(actualRoute.pathHtml + "?v=" + Date.now()).then((data) => data.text());
   // Ajout du contenu HTML à l'élément avec l'ID "main-page"
   document.getElementById("main-page").innerHTML = html;
+  document.querySelectorAll("header .nav-link[href]").forEach((link) => {
+    const active = new URL(link.href).pathname === path;
+    link.classList.toggle("active", active);
+    if(active){
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+  if(!window.location.hash){
+    window.scrollTo(0, 0);
+  }
 
   // Ajout du contenu JavaScript
   if (actualRoute.pathJS != "") {

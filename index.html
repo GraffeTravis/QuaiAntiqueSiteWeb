@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Quai Antique, une table savoyarde contemporaine imaginée à Chambéry. Découvrez l'univers d'Arnaud Michant, la carte et les menus de ce restaurant fictif.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/scss/main.css?v=20260916-gallery-controls"/>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/scss/main.css?v=20260918-identite"/>
     <title>Quai Antique</title>
 </head>
 <body>
-    <header><nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+    <header><nav class="navbar navbar-expand-lg bg-dark navbar-quai" data-bs-theme="dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Quai Antique</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +27,9 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/lacarte">La carte</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/menu">Menus</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/allresa" data-show="connected">Les réservations</a>
@@ -51,25 +55,43 @@
         <!-- Le contenu de la page sera injectée ici-->
     </main>
     
-    <footer class="bg-dark text-white text-center footer">
-        <div class="row">   
-            <div class="col-12 col-lg-4">
-                <h3 class="text-primary">Nos horaires</h3>
-                <p>Du mardi au dimanche  12:00-14:00  18:00-23:00</p>
-            </div>
-            <div class="col-6 col-lg-4">
-                <p>Quai Antique <br/>
-                5 rue de la rue <br/>
-                311500 Ville <br/>
-                04 01 01 01 01</p>
-            </div>
-            <div class="col-6 col-lg-4">
-                <p>contact@quaiantique.com</p>
-            </div>
-        </div> 
+    <footer class="bg-dark text-white footer">
+      <div class="container">
+        <div class="footer-main">
+          <div class="footer-about">
+            <a class="footer-brand" href="/">Quai Antique</a>
+            <p>La Savoie, au rythme du marché.<br>La troisième maison d'Arnaud Michant, imaginée au cœur de Chambéry.</p>
+            <a href="/reserver" class="btn btn-primary">Réserver une table</a>
+          </div>
+          <nav class="footer-nav" aria-label="Navigation du pied de page">
+            <h2>Explorer</h2>
+            <a href="/lacarte">La carte</a>
+            <a href="/menu">Les menus</a>
+            <a href="/galerie">La galerie</a>
+          </nav>
+          <div class="footer-hours">
+            <h2>Horaires de service</h2>
+            <dl>
+              <div><dt>Lundi</dt><dd>Fermé</dd></div>
+              <div><dt>Mardi</dt><dd data-service-hours>12h00–14h00 · 19h00–21h00</dd></div>
+              <div><dt>Mercredi</dt><dd data-service-hours>12h00–14h00 · 19h00–21h00</dd></div>
+              <div><dt>Jeudi</dt><dd data-service-hours>12h00–14h00 · 19h00–21h00</dd></div>
+              <div><dt>Vendredi</dt><dd data-service-hours>12h00–14h00 · 19h00–21h00</dd></div>
+              <div><dt>Samedi</dt><dd data-service-hours>12h00–14h00 · 19h00–21h00</dd></div>
+              <div><dt>Dimanche</dt><dd data-service-hours>12h00–14h00 · 19h00–21h00</dd></div>
+            </dl>
+            <p id="serviceHoursNote" class="footer-hours-note" hidden>Horaires indicatifs, à confirmer lors de la réservation.</p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>Quai Antique · Chambéry, Savoie</span>
+          <span>Restaurant et histoire fictifs · Projet d'étude</span>
+        </div>
+      </div>
     </footer>
 
     <script src="/js/script.js"></script>
+    <script type="module" src="/js/footer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="Router/router.js"></script>
 </body>

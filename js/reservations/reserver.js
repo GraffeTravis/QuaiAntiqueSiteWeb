@@ -1,3 +1,5 @@
+import { loadRestaurant, getServiceRanges, getReservationSlots, isClosedOnMonday } from "../restaurant.js";
+
 const apiUrl = window.apiUrl;
 const getAuthHeaders = window.getAuthHeaders;
 const sanitizeHtml = window.sanitizeHtml;
@@ -13,6 +15,7 @@ const selectHour = document.getElementById("selectHour");
 const submitBookingButton = document.getElementById("bookingSubmitBtn");
 const bookingId = new URLSearchParams(window.location.search).get("id");
 const restaurantId = 1;
+let availabilityRequest = 0;
 
 loadReservationPage();
 
@@ -22,10 +25,18 @@ inputDateReservation.addEventListener("change", checkAvailability);
 selectHour.addEventListener("change", checkAvailability);
 
 async function loadReservationPage(){
-    fillHourOptions();
+    submitBookingButton.disabled = true;
+    selectHour.disabled = true;
     inputDateReservation.min = new Date().toISOString().split("T")[0];
 
     try {
+        const ranges = getServiceRanges(await loadRestaurant());
+        const slots = getReservationSlots(ranges);
+        selectHour.innerHTML = slots.map((slot) => `<option value="${slot}">${slot}</option>`).join("");
+        selectHour.disabled = slots.length === 0;
+        if(slots.length === 0){
+            throw new Error("Aucun service n'est disponible pour le moment.");
+        }
         const accountResponse = await fetch(apiUrl + "account/me", {
             method: "GET",
             headers: getAuthHeaders()
@@ -64,25 +75,13 @@ async function loadReservationPage(){
     }
 }
 
-function fillHourOptions(){
-    const slots = [];
-    addSlots(slots, "12:00", "14:00");
-    addSlots(slots, "19:00", "21:00");
-
-    selectHour.innerHTML = slots.map((slot) => `<option value="${slot}">${slot}</option>`).join("");
-}
-
-function addSlots(slots, start, end){
-    const current = new Date("2026-01-01T" + start + ":00");
-    const last = new Date("2026-01-01T" + end + ":00");
-
-    while(current <= last){
-        slots.push(current.toTimeString().slice(0, 5));
-        current.setMinutes(current.getMinutes() + 15);
-    }
-}
-
 async function checkAvailability(){
+    const requestId = ++availabilityRequest;
+    submitBookingButton.disabled = true;
+    if(isClosedOnMonday(inputDateReservation.value)){
+        availabilityMessage.innerHTML = `<p class="text-danger">Le restaurant est fermé le lundi. Choisissez un jour du mardi au dimanche.</p>`;
+        return;
+    }
     if(!inputDateReservation.value || !selectHour.value || !inputGuestReservation.value){
         availabilityMessage.innerHTML = "";
         return;
@@ -107,6 +106,9 @@ async function checkAvailability(){
         }
 
         const availability = await response.json();
+        if(requestId !== availabilityRequest){
+            return;
+        }
 
         if(availability.available){
             availabilityMessage.innerHTML = `<p class="text-success">Créneau disponible. Places restantes : ${Number(availability.remaining)}</p>`;
@@ -118,8 +120,11 @@ async function checkAvailability(){
         submitBookingButton.disabled = true;
     }
     catch(error) {
+        if(requestId !== availabilityRequest){
+            return;
+        }
         availabilityMessage.innerHTML = `<p class="text-danger">${sanitizeHtml(error.message)}</p>`;
-        submitBookingButton.disabled = false;
+        submitBookingButton.disabled = true;
     }
 }
 
