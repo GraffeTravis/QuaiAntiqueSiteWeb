@@ -17,6 +17,8 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - run: npm run build:css
+      - run: git diff --exit-code -- scss/main.css scss/main.css.map
       - run: npm run check
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

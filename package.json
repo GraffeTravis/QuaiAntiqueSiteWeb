@@ -4,7 +4,8 @@
     "dev": "node dev-server.mjs",
     "build:css": "sass --quiet-deps scss/main.scss scss/main.css",
     "check": "node scripts/check-syntax.mjs && node scripts/check-routes.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:release": "node scripts/check-release.mjs"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
