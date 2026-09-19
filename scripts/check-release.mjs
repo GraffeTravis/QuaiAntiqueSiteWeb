@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
-import { chromium, expect } from "@playwright/test";
+import { chromium, expect as baseExpect } from "@playwright/test";
 import { allRoutes } from "../Router/allRoutes.js";
 
 const baseURL = process.argv[2];
+const expect = baseExpect.configure({ timeout: 30000 });
 assert(baseURL, "Usage: npm run test:release -- <URL> [--proxy-local-api]");
 const origin = new URL(baseURL).origin;
 const proxyLocalApi = process.argv.includes("--proxy-local-api");

@@ -63,4 +63,24 @@ En cas de défaut bloquant après publication, rétablir le déploiement Vercel 
 
 ## Après publication
 
-À compléter après confirmation du déploiement et exécution de la recette sur le domaine public.
+La refonte a été publiée depuis le commit `c543821c627a101fad6ad885cfd4a7ed5658ecbf`. La branche `refonte-style` a été poussée, vérifiée par GitHub Actions, puis intégrée à `main` par avance rapide, sans push forcé.
+
+| Contrôle après publication | Résultat |
+| --- | --- |
+| GitHub Actions de `refonte-style` | [Exécution 35414208759 réussie](https://github.com/GraffeTravis/QuaiAntiqueSiteWeb/actions/runs/35414208759) |
+| GitHub Actions de `main` | [Exécution 35414333790 réussie](https://github.com/GraffeTravis/QuaiAntiqueSiteWeb/actions/runs/35414333790) |
+| Déploiement Vercel | État `success`, déploiement GitHub `6535942546`, commit `c543821` |
+| URL de ce déploiement | https://quai-antique-site-r8v42tueb-travis22.vercel.app |
+| Domaine public | https://quai-antique-site-web.vercel.app |
+| Recette sur le domaine public, sans proxy | 33 contrôles réussis ; rapport démarré le 19 septembre 2026 à 02:02:26 UTC |
+| Erreurs capturées sur le parcours complet réussi | Aucune erreur JavaScript, console, HTTP ou réseau |
+| Routes | 11 accès directs validés, redirections anonymes conformes, page 404 applicative, navigation et retour arrière réussis |
+| Données réelles | Photos de la base décodées, titres et prix des menus comparés à l'API, horaires du footer conformes |
+| Responsive | Absence de débordement à 320, 390, 768 et 1440 pixels ; captures ordinateur/mobile inspectées |
+| Fichiers publiés | 11 fichiers clés comparés au dépôt, identiques après normalisation des fins de ligne |
+
+Les fichiers comparés sont `index.html`, `Router/allRoutes.js`, `Router/router.js`, `js/home.js`, `js/menu.js`, `js/footer.js`, `js/restaurant.js`, `js/reservations/reserver.js`, `pages/home.html`, `pages/menu.html` et `scss/main.css`.
+
+Le premier passage en production s'est arrêté sur l'attente des trois photos, limitée par défaut à cinq secondes. Aucune erreur réseau n'avait été capturée. Le délai des assertions de la recette a été explicitement porté à trente secondes ; le parcours complet suivant a réussi, avec décodage des images. Ce réglage concerne uniquement l'outil de test et ne modifie ni le site ni les réponses de l'API. Il ne constitue pas une mesure de performance garantie.
+
+Le commit de clôture ajoute ce bilan et le réglage du test, sans modifier les fichiers applicatifs validés. Aucun compte, aucune réservation et aucune photo n'ont été créés ou modifiés en production pendant la recette. Le serveur et la base n'ont pas été redéployés.
