@@ -12011,12 +12011,21 @@ html {
 }
 
 body {
+  isolation: isolate;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   color: var(--quai-ink);
-  background: linear-gradient(180deg, rgba(255, 250, 242, 0.9), rgba(247, 241, 231, 0.92)), var(--quai-cream);
+  background: var(--quai-forest);
   font-family: "Hind Madurai", Arial, Helvetica, sans-serif;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("../images/FondHeroScene.jpg") center/cover no-repeat;
 }
 
 main {
@@ -12115,10 +12124,10 @@ p {
 
 .hero-scene {
   overflow: hidden;
-  background-color: var(--quai-forest);
+  background-color: transparent;
 }
 .hero-scene::before {
-  background-image: linear-gradient(90deg, rgba(18, 24, 19, 0.78), rgba(18, 24, 19, 0.34)), url("../images/FondHeroScene.jpg");
+  background-image: linear-gradient(90deg, rgba(18, 24, 19, 0.78), rgba(18, 24, 19, 0.5));
   filter: none;
   background-position: center;
 }
@@ -12244,7 +12253,14 @@ p {
 
 .carte-section {
   padding-block: 4rem 5rem;
-  background: var(--quai-paper);
+  background: rgba(251, 252, 250, 0.88);
+}
+
+#main-page > .container {
+  max-width: none;
+  padding: 2rem max(1rem, (100% - 1140px) / 2);
+  margin-block: 0 !important;
+  background: rgba(251, 252, 250, 0.96);
 }
 
 .carte-item {
@@ -12469,7 +12485,7 @@ footer.footer p {
 }
 
 .house-introduction {
-  background: var(--quai-paper);
+  background: rgba(251, 252, 250, 0.88);
 }
 .house-introduction .container {
   display: grid;
@@ -12492,7 +12508,7 @@ footer.footer p {
 }
 
 .chef-story {
-  background: #edf1ed;
+  background: rgba(237, 241, 237, 0.9);
 }
 
 .chef-layout,
@@ -12599,7 +12615,7 @@ footer.footer p {
 }
 
 .home-menus {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.88);
 }
 
 .home-menus-layout {
@@ -12657,7 +12673,7 @@ footer.footer p {
 }
 
 .house-visit {
-  background: var(--quai-paper);
+  background: rgba(251, 252, 250, 0.88);
 }
 
 .visit-layout {

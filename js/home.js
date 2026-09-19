@@ -1,10 +1,5 @@
 const homeGallery = document.getElementById("homeGallery");
 const homeMenus = document.getElementById("homeMenus");
-const fallbackPictures = [
-    { title: "Soupe à l'oignon gratinée", imageUrl: "/images/gallery-preview/soupe-oignon.jpg" },
-    { title: "Filet de poisson et légumes", imageUrl: "/images/gallery-preview/filet-poisson.jpg" },
-    { title: "Tarte tatin", imageUrl: "/images/gallery-preview/tarte-tatin.jpg" }
-];
 
 loadHomeGallery();
 loadHomeMenus();
@@ -45,16 +40,22 @@ async function loadHomeMenus(){
 
 async function loadHomeGallery(){
     try {
-        const response = await fetch(window.apiUrl + "restaurants/1/pictures");
+        const response = await fetch(window.apiUrl + "restaurants/1/pictures", { cache: "no-store" });
         if(!response.ok){
             throw new Error("Galerie indisponible");
         }
 
         const data = await response.json();
-        renderHomeGallery((data.pictures || []).slice(0, 3));
+        if(!Array.isArray(data.pictures)){
+            throw new Error("Réponse de galerie invalide");
+        }
+        renderHomeGallery(data.pictures.slice(0, 3));
     }
     catch(error) {
-        renderHomeGallery(fallbackPictures);
+        homeGallery.innerHTML = `<p>La galerie est momentanément indisponible. Réessayez dans quelques instants.</p>`;
+    }
+    finally {
+        homeGallery.setAttribute("aria-busy", "false");
     }
 }
 

@@ -105,7 +105,7 @@ La capacité est gérée par l'administration : ne pas annoncer arbitrairement �
 
 ## Traduction visuelle et éditoriale
 
-Conserver le vert profond de la branche appréciée par l'utilisateur, le bordeaux pour la réservation et un ocre lisible pour les petits repères. Ouvrir davantage les sections sur du blanc minéral. Le vert renvoie aux reliefs et à la salle, le bordeaux aux coteaux, les filets sobres aux menus imprimés. La couleur ne doit pas remplacer la lisibilité : titres sombres sur fond clair, accents plus lumineux sur fond foncé.
+Conserver le vert profond de la branche appréciée par l'utilisateur, le bordeaux pour la réservation et un ocre lisible pour les petits repères. Les sections claires laissent désormais apparaître l'image fixe du hero à travers un voile blanc minéral, pour un effet cascade au défilement. Les bandes vertes restent opaques et les formulaires gardent un fond presque opaque. Le vert renvoie aux reliefs et à la salle, le bordeaux aux coteaux, les filets sobres aux menus imprimés. La couleur ne doit pas remplacer la lisibilité : titres sombres sur fond clair, accents plus lumineux sur fond foncé.
 
 Conserver Playfair Display pour la marque et les titres éditoriaux, Hind Madurai pour les textes et contrôles. La divergence par rapport à Montserrat dans la charte initiale est une décision explicite de la refonte, à reporter dans le dossier de soutenance si cette direction est retenue.
 
@@ -130,7 +130,7 @@ Les photos du dépôt sont des illustrations, pas des preuves d'une adresse rée
 | Prix de l'accueil | `GET /api/menus` ; même source que `js/menu.js` | Pas de prix commercial en dur dans l'accueil. Une API indisponible n'affiche pas de faux tarifs actuels. |
 | Horaires du footer et réservations | `GET /api/restaurants/1` ; `js/restaurant.js` | Une même lecture des plages configurées ; les créneaux du formulaire ne restent plus bloqués sur les horaires d'initialisation. |
 | Lundi | `BookingController::isOpenAt` et `BookingControllerTest::testRestaurantIsClosedOnMonday` | Déjà refusé côté API ; inutile de réinventer une règle backend. Le formulaire l'indique aussi. |
-| Galerie | `GET /api/restaurants/1/pictures` | Aperçu plafonné à trois photos ; images du dépôt uniquement en secours d'une indisponibilité. |
+| Galerie | `GET /api/restaurants/1/pictures` | Les trois premières photos de la réponse, triée par date décroissante côté API. Nouvelle requête sans cache à chaque chargement de l'accueil ; aucun secours local. Une base vide et une API indisponible ont des messages distincts. |
 | Navigation longue | Routeur et liens de l'accueil | Retour en haut lors d'un changement de page et indication de la page active ; liens d'ancre conservés. |
 | Administration | Plats, menus, galerie, capacité, horaires | Aucune mutation de données de production ni modification du modèle relationnel pour cette identité. |
 
@@ -138,7 +138,7 @@ Constats hors de cette modification : le CDC demande des plats rangés par caté
 
 Pour chaque évolution : identifier les pages consommatrices et la source de la donnée, relire la contrainte du CDC, vérifier les états vide/erreur et les droits concernés, puis tester le parcours affecté. Une modification d'horaire ou de prix n'est pas seulement une modification de texte.
 
-La recette locale est consignée dans `TESTING.md` : compilation et contrôles de syntaxe réussis, huit parcours automatisés réussis avec réponses API simulées, accueil contrôlé sur quatre largeurs d'écran. Cela ne remplace pas une recette sur l'API réelle avant publication. Aucun changement n'a été déployé.
+La recette locale est consignée dans `TESTING.md` : compilation et contrôles de syntaxe réussis, onze parcours automatisés réussis avec réponses API simulées après l'ajout du fond fixe et la suppression des photos de secours, accueil contrôlé sur quatre largeurs d'écran. Cela ne remplace pas une recette sur l'API réelle avant publication. Aucun changement n'a été déployé.
 
 ## Sources externes
 

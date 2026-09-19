@@ -136,6 +136,68 @@ test("l'accueil distingue les menus vides et indisponibles sans inventer de prix
   await expect(page.locator("#homeMenus .home-menu-item")).toHaveCount(0);
 });
 
+test("l'accueil affiche uniquement les photos API et les actualise au retour", async ({ page }) => {
+  const imageUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/iRsAAAAASUVORK5CYII=";
+  let title = "Dernière photo en base";
+  let requests = 0;
+  await page.route("**/api/restaurants/1/pictures", route => {
+    requests++;
+    return route.fulfill({ json: { pictures: Array.from({ length: 4 }, (_, id) => ({ id, title: id === 0 ? title : `Photo API ${id}`, imageUrl })) } });
+  });
+  await page.goto("/", { waitUntil: "commit" });
+  await expect(page.locator("#homeGallery img")).toHaveCount(3);
+  await expect(page.locator("#homeGallery img").first()).toHaveAttribute("src", imageUrl);
+  await expect(page.locator("#homeGallery img").first()).toHaveAttribute("alt", title);
+  await page.locator("#homeGallery a").first().click();
+  await expect(page).toHaveURL(/\/galerie$/);
+  title = "Photo renommée en base";
+  const previousRequests = requests;
+  await page.locator("header .navbar-brand").click();
+  await expect(page.locator("#homeGallery img").first()).toHaveAttribute("alt", title);
+  expect(requests).toBeGreaterThan(previousRequests);
+});
+
+test("la galerie vide ou indisponible ne remplace jamais les photos par des images locales", async ({ page }) => {
+  let status = 200;
+  let body = { pictures: [] };
+  await page.route("**/api/restaurants/1/pictures", route => route.fulfill({ status, json: body }));
+  await page.goto("/", { waitUntil: "commit" });
+  await expect(page.locator("#homeGallery")).toContainText("arrivent bientôt");
+  await expect(page.locator("#homeGallery img")).toHaveCount(0);
+  for(const invalidResponse of [false, true]){
+    status = invalidResponse ? 200 : 503;
+    body = invalidResponse ? {} : { pictures: [] };
+    await page.reload({ waitUntil: "commit" });
+    await expect(page.locator("#homeGallery")).toContainText("momentanément indisponible");
+    await expect(page.locator("#homeGallery img")).toHaveCount(0);
+    await expect(page.locator("#homeGallery")).toHaveAttribute("aria-busy", "false");
+  }
+});
+
+test("le fond reste fixe et les sections claires restent translucides sur mobile et ordinateur", async ({ page }) => {
+  await page.goto("/", { waitUntil: "commit" });
+  await expect(page.locator(".house-introduction")).toBeVisible();
+  for(const width of [320, 390, 768, 1440]){
+    await page.setViewportSize({ width, height: 900 });
+    await page.locator(".house-visit").scrollIntoViewIfNeeded();
+    const styles = await page.evaluate(() => {
+      const background = getComputedStyle(document.body, "::before");
+      return {
+        position: background.position,
+        top: background.top,
+        image: background.backgroundImage,
+        sections: [".house-introduction", ".chef-story", ".home-menus", ".house-visit"].map(selector => getComputedStyle(document.querySelector(selector)).backgroundColor),
+        overflow: document.documentElement.scrollWidth > innerWidth,
+      };
+    });
+    expect(styles.position).toBe("fixed");
+    expect(styles.top).toBe("0px");
+    expect(styles.image).toContain("FondHeroScene.jpg");
+    expect(styles.sections.every(color => color.startsWith("rgba("))).toBe(true);
+    expect(styles.overflow).toBe(false);
+  }
+});
+
 test("menu mobile Bootstrap", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/", { waitUntil: "commit" });

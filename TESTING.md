@@ -17,3 +17,12 @@ Après une modification SCSS, `npm run build:css` régénère la feuille CSS ser
 - Aucun déploiement ni changement dans les données de production. Une recette avec l'API réelle reste nécessaire avant publication.
 
 Sous Windows, si l'arrêt du serveur lancé par Playwright reste bloqué, démarrer séparément `dev-server.mjs` avec `PORT=5512` avant les tests : Playwright réutilise ce serveur. Arrêter ensuite uniquement ce processus de test, en conservant le serveur d'aperçu sur 5500.
+
+## Complément : fond fixe et galerie exclusivement API
+
+- Fond photographique partagé, fixé à la fenêtre sans animation JavaScript. Sections claires translucides, bandes vertes opaques et formulaires sur un voile plus opaque.
+- L'accueil appelle `GET /api/restaurants/1/pictures` sans cache à chaque chargement et conserve les trois premières photos. Le contrôleur serveur lit le dépôt de photos du restaurant, triées par date de création décroissante. Il ne s'agit pas d'une mise à jour en temps réel : revenir sur l'accueil ou recharger la page relit les données.
+- Aucun tableau d'images de secours dans le code de l'accueil. Base vide, erreur réseau et réponse invalide ont des états explicites, sans photo locale de remplacement. Les images locales encore référencées par les tests servent uniquement de données de recette.
+- `npm run test:e2e -- --workers=2` : 11 tests réussis, dont actualisation des photos, absence de secours local et contrôles de fond fixe/transparence/débordement à 320, 390, 768 et 1440 pixels.
+- Captures contrôlées sur ordinateur et mobile, ainsi que sur le formulaire de connexion. Compilation CSS et contrôles de syntaxe/routes réussis.
+- La lecture directe de l'API de production depuis PowerShell a échoué lors de la connexion TLS. Les tests utilisent des réponses simulées ; aucune donnée de production n'a été modifiée.
