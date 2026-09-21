@@ -11,7 +11,7 @@ passwordForm.addEventListener("submit", updatePassword);
 async function updatePassword(event){
     event.preventDefault();
 
-    if(inputPassword.value.length < 12 || new TextEncoder().encode(inputPassword.value).length > 72){
+    if([...inputPassword.value].length < 12 || new TextEncoder().encode(inputPassword.value).length > 72){
         alert("Utilisez au moins 12 caractères.");
         return;
     }

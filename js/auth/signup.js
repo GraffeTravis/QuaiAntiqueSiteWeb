@@ -43,7 +43,7 @@ function validateConfirmationPassword(inputPwd, inputConfirmPwd){
 }
 
 function validatePassword(input){
-    if(input.value.length >= 12 && new TextEncoder().encode(input.value).length <= 72){
+    if([...input.value].length >= 12 && new TextEncoder().encode(input.value).length <= 72){
         input.classList.add("is-valid");
         input.classList.remove("is-invalid");
         return true;
