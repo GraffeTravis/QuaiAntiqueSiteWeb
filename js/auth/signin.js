@@ -17,7 +17,8 @@ myHeaders.append("Content-Type", "application/json");
 
 let raw = JSON.stringify({
   "username": dataForm.get("Mail"),
-  "password": dataForm.get("Mdp")
+  "password": dataForm.get("Mdp"),
+  "rememberMe": document.getElementById("exampleCheck1").checked
 });
 
 let requestOptions = {
@@ -36,9 +37,9 @@ fetch(apiUrl + "login", requestOptions)
         return response.json();
     })
     .then(result => {
-        setToken(result.apiToken);
+        setToken(result.apiToken, result.expiresAt);
         const role = result.roles.includes("ROLE_ADMIN") ? "admin" : "client";
-        setCookie(RoleCookieName, role, 7);
+        setCookie(RoleCookieName, role, Math.max(0, (Date.parse(result.expiresAt) - Date.now()) / 86400000));
         window.location.replace(getRedirectPath());
     })
     .catch(error => {

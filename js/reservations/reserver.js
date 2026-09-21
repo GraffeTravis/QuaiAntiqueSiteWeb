@@ -27,7 +27,7 @@ selectHour.addEventListener("change", checkAvailability);
 async function loadReservationPage(){
     submitBookingButton.disabled = true;
     selectHour.disabled = true;
-    inputDateReservation.min = new Date().toISOString().split("T")[0];
+    inputDateReservation.min = new Intl.DateTimeFormat("fr-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
 
     try {
         const ranges = getServiceRanges(await loadRestaurant());
@@ -99,7 +99,7 @@ async function checkAvailability(){
     }
 
     try {
-        const response = await fetch(apiUrl + "bookings/availability?" + params.toString());
+        const response = await fetch(apiUrl + "bookings/availability?" + params.toString(), { headers: getAuthHeaders() });
 
         if(!response.ok){
             throw new Error("Disponibilité impossible à vérifier.");
