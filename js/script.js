@@ -4,13 +4,14 @@ const signoutBtn = document.getElementById("signout-btn");
 const localApiUrl = "http://127.0.0.1:8000/api/";
 const productionApiUrl = "https://api.quaiantique.tech/api/";
 const stagingApiUrl = "https://quai-antique-api-staging-c0e2bc904c02.herokuapp.com/api/";
-const apiUrl = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+const configuredApiUrl = window.QUAI_ANTIQUE_API_URL;
+const apiUrl = configuredApiUrl || (["localhost", "127.0.0.1"].includes(window.location.hostname)
     ? localApiUrl
     : ["quaiantique.tech", "www.quaiantique.tech"].includes(window.location.hostname)
         ? productionApiUrl
         : window.location.hostname.endsWith(".vercel.app")
             ? stagingApiUrl
-            : "/__api_not_configured__/";
+            : "/__api_not_configured__/");
 
 if (signoutBtn) {
     signoutBtn.addEventListener("click", signout);
