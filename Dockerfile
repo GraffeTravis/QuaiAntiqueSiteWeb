@@ -18,7 +18,8 @@ COPY --from=frontend-assets /build/node_modules/bootstrap/dist/js/bootstrap.bund
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY docker/docker-config.js.template /usr/share/nginx/html/docker-config.js.template
 COPY docker/40-runtime-config.sh /docker-entrypoint.d/40-runtime-config.sh
-RUN chmod 755 /docker-entrypoint.d/40-runtime-config.sh
+RUN sed -i 's/\r$//' /docker-entrypoint.d/40-runtime-config.sh \
+    && chmod 755 /docker-entrypoint.d/40-runtime-config.sh
 RUN sed -i 's#https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js#/vendor/bootstrap.bundle.min.js#' /usr/share/nginx/html/index.html
 
 EXPOSE 8080
