@@ -2,6 +2,7 @@ const apiUrl = window.apiUrl;
 const getAuthHeaders = window.getAuthHeaders;
 const passwordForm = document.querySelector("form");
 const inputPassword = document.getElementById("PasswordInput");
+const inputCurrentPassword = document.getElementById("CurrentPasswordInput");
 const inputConfirmPassword = document.getElementById("ValidatePasswordInput");
 const submitPasswordButton = passwordForm.querySelector("button[type='submit']");
 
@@ -10,8 +11,8 @@ passwordForm.addEventListener("submit", updatePassword);
 async function updatePassword(event){
     event.preventDefault();
 
-    if(inputPassword.value.length < 8){
-        alert("Le mot de passe doit contenir au moins 8 caractères.");
+    if([...inputPassword.value].length < 12 || new TextEncoder().encode(inputPassword.value).length > 72){
+        alert("Utilisez au moins 12 caractères.");
         return;
     }
 
@@ -27,7 +28,8 @@ async function updatePassword(event){
             method: "PUT",
             headers: getAuthHeaders(),
             body: JSON.stringify({
-                password: inputPassword.value
+                password: inputPassword.value,
+                currentPassword: inputCurrentPassword.value
             })
         });
 
@@ -35,8 +37,9 @@ async function updatePassword(event){
             throw new Error("Le changement de mot de passe a échoué.");
         }
 
-        alert("Votre mot de passe a été modifié.");
-        window.location.replace("/account");
+        window.clearSession();
+        alert("Votre mot de passe a été modifié. Veuillez vous reconnecter.");
+        window.location.replace("/signin");
     }
     catch(error) {
         alert(error.message);

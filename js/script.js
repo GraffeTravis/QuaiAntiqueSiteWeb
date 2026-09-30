@@ -3,9 +3,15 @@ const RoleCookieName = "role";
 const signoutBtn = document.getElementById("signout-btn");
 const localApiUrl = "http://127.0.0.1:8000/api/";
 const productionApiUrl = "https://api.quaiantique.tech/api/";
-const apiUrl = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+const stagingApiUrl = "https://quai-antique-api-staging-c0e2bc904c02.herokuapp.com/api/";
+const configuredApiUrl = window.QUAI_ANTIQUE_API_URL;
+const apiUrl = configuredApiUrl || (["localhost", "127.0.0.1"].includes(window.location.hostname)
     ? localApiUrl
-    : productionApiUrl;
+    : ["quaiantique.tech", "www.quaiantique.tech"].includes(window.location.hostname)
+        ? productionApiUrl
+        : window.location.hostname.endsWith(".vercel.app")
+            ? stagingApiUrl
+            : "/__api_not_configured__/");
 
 if (signoutBtn) {
     signoutBtn.addEventListener("click", signout);
@@ -27,17 +33,40 @@ function normalizeRole(role){
     return role;
 }
 
-function signout(){
-    eraseCookie(tokenCookieName);
-    eraseCookie(RoleCookieName);
-    window.location.reload();
+async function signout(){
+    try {
+        const response = await fetch(apiUrl + "logout", { method: "POST", headers: getAuthHeaders() });
+        if(!response.ok && response.status !== 401){
+            throw new Error("Déconnexion impossible. Réessayez pour révoquer votre session.");
+        }
+        clearSession();
+        window.location.replace("/signin");
+    } catch(error) {
+        alert(error.message);
+    }
 }
 
-function setToken(token){
-    setCookie(tokenCookieName, token, 7);
+function clearSession(){
+    eraseCookie(tokenCookieName);
+    eraseCookie(RoleCookieName);
+    eraseCookie("sessionExpiresAt");
+}
+
+function setToken(token, expiresAt){
+    const days = Math.max(0, (Date.parse(expiresAt) - Date.now()) / 86400000);
+    if(!Number.isFinite(days) || days <= 0){
+        throw new Error("La session reçue est invalide.");
+    }
+    setCookie(tokenCookieName, token, days);
+    setCookie("sessionExpiresAt", expiresAt, days);
 }
 
 function getToken(){
+    const expiry = getCookie("sessionExpiresAt");
+    if(expiry && (!Number.isFinite(Date.parse(expiry)) || Date.parse(expiry) <= Date.now())){
+        clearSession();
+        return null;
+    }
     return getCookie(tokenCookieName);
 }
 
@@ -48,7 +77,8 @@ function setCookie(name,value,days){
         date.setTime(date.getTime() + (days*24*60*60*1000));
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + encodeURIComponent(value || "")  + expires + "; path=/";
+    document.cookie = name + "=" + encodeURIComponent(value || "") + expires + "; path=/; SameSite=Lax"
+        + (window.location.protocol === "https:" ? "; Secure" : "");
 }
 
 function getCookie(name) {
@@ -117,15 +147,9 @@ function showAndHideElementsForRoles(){
 }
 
 function sanitizeHtml(text){
-    // Créez un élément HTML temporaire de type "div"
-    const tempHtml = document.createElement('div');
-    
-    // Affectez le texte reçu en tant que contenu texte de l'élément "tempHtml"
-    tempHtml.textContent = text;
-    
-    // Utilisez .innerHTML pour récupérer le contenu de "tempHtml"
-    // Cela va "neutraliser" ou "échapper" tout code HTML potentiellement malveillant
-    return tempHtml.innerHTML;
+    // Also escape quotes: callers use both text nodes and quoted HTML attributes.
+    const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+    return String(text ?? "").replace(/[&<>"']/g, character => entities[character]);
 }
 
 function getAuthHeaders(){
@@ -145,15 +169,24 @@ function apiAssetUrl(path){
         return "";
     }
 
-    if(path.startsWith("http") || path.startsWith("data:")){
-        return path;
+    if(typeof path !== "string"){
+        return "";
+    }
+    if(path.startsWith("data:")){
+        return /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(path) ? path : "";
     }
 
     if(path.startsWith("/images/")){
         return path;
     }
 
-    return apiUrl.replace("/api/", "") + path;
+    try {
+        const base = new URL(apiUrl, window.location.origin);
+        const image = new URL(path, base.origin);
+        return ["http:", "https:"].includes(image.protocol) && image.origin === base.origin ? image.href : "";
+    } catch {
+        return "";
+    }
 }
 
 function getInfosUser(){
@@ -188,6 +221,7 @@ window.tokenCookieName = tokenCookieName;
 window.RoleCookieName = RoleCookieName;
 window.getRole = getRole;
 window.signout = signout;
+window.clearSession = clearSession;
 window.setToken = setToken;
 window.getToken = getToken;
 window.setCookie = setCookie;

@@ -43,9 +43,7 @@ function validateConfirmationPassword(inputPwd, inputConfirmPwd){
 }
 
 function validatePassword(input){
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
-
-    if(input.value.match(passwordRegex)){
+    if([...input.value].length >= 12 && new TextEncoder().encode(input.value).length <= 72){
         input.classList.add("is-valid");
         input.classList.remove("is-invalid");
         return true;
