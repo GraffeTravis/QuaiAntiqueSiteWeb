@@ -1,5 +1,9 @@
 const apiUrl = window.apiUrl;
 const getAuthHeaders = window.getAuthHeaders;
+const setToken = window.setToken;
+const setSessionExpiry = window.setSessionExpiry;
+const setCookie = window.setCookie;
+const roleCookieName = window.RoleCookieName;
 const inputNom = document.getElementById("NomInput");
 const inputPrenom = document.getElementById("PrenomInput");
 const inputGuestNumber = document.getElementById("NbConvivesInput");
@@ -100,6 +104,7 @@ function InscrireUtilisateur(){
     let requestOptions = {
         method: "POST",
         headers: getAuthHeaders(),
+        credentials: window.useHttpOnlySession ? "include" : "omit",
         body: JSON.stringify({
             firstName: dataForm.get("Prenom"),
             lastName: dataForm.get("Nom"),
@@ -119,9 +124,16 @@ function InscrireUtilisateur(){
 
             return response.json();
         })
-        .then(() => {
-            alert(`Inscription réussie ! Bienvenue ${dataForm.get("Prenom")}, vous pouvez désormais vous connecter.`);
-            window.location.replace("/signin");
+        .then(result => {
+            if(result.apiToken){
+                setToken(result.apiToken, result.expiresAt);
+            } else {
+                setSessionExpiry(result.expiresAt);
+            }
+            const role = result.roles.includes("ROLE_ADMIN") ? "admin" : "client";
+            setCookie(roleCookieName, role, Math.max(0, (Date.parse(result.expiresAt) - Date.now()) / 86400000));
+            alert(`Inscription réussie ! Bienvenue ${dataForm.get("Prenom")}.`);
+            window.location.replace("/");
         })
         .catch(error => alert(error.message));
 }

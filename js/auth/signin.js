@@ -1,5 +1,7 @@
 const apiUrl = window.apiUrl;
 const setToken = window.setToken;
+const setSessionExpiry = window.setSessionExpiry;
+const getAuthHeaders = window.getAuthHeaders;
 const setCookie = window.setCookie;
 const RoleCookieName = window.RoleCookieName;
 const inputMail = document.getElementById("MailInput");
@@ -12,8 +14,7 @@ btnSignin.addEventListener("click", checkCredentials);
 function checkCredentials() {
     let dataForm = new FormData(signinForm);
     
-    let myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
+    const myHeaders = getAuthHeaders();
 
 let raw = JSON.stringify({
   "username": dataForm.get("Mail"),
@@ -25,7 +26,8 @@ let requestOptions = {
   method: 'POST',
   headers: myHeaders,
   body: raw,
-  redirect: 'follow'
+  redirect: 'follow',
+  credentials: window.useHttpOnlySession ? "include" : "omit"
 };
 
 fetch(apiUrl + "login", requestOptions)
@@ -37,7 +39,11 @@ fetch(apiUrl + "login", requestOptions)
         return response.json();
     })
     .then(result => {
-        setToken(result.apiToken, result.expiresAt);
+        if(result.apiToken){
+            setToken(result.apiToken, result.expiresAt);
+        } else {
+            setSessionExpiry(result.expiresAt);
+        }
         const role = result.roles.includes("ROLE_ADMIN") ? "admin" : "client";
         setCookie(RoleCookieName, role, Math.max(0, (Date.parse(result.expiresAt) - Date.now()) / 86400000));
         window.location.replace(getRedirectPath());

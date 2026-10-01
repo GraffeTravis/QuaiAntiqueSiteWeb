@@ -1,5 +1,6 @@
 const apiUrl = window.apiUrl;
 const getAuthHeaders = window.getAuthHeaders;
+const apiFetch = window.apiFetch;
 const sanitizeHtml = window.sanitizeHtml;
 const signout = window.signout;
 const accountForm = document.querySelector("form");
@@ -17,7 +18,7 @@ deleteButton.addEventListener("click", deleteAccount);
 
 async function loadAccount(){
     try {
-        const response = await fetch(apiUrl + "account/me", {
+        const response = await apiFetch(apiUrl + "account/me", {
             method: "GET",
             headers: getAuthHeaders()
         });
@@ -42,7 +43,7 @@ async function updateAccount(event){
     submitButton.disabled = true;
 
     try {
-        const response = await fetch(apiUrl + "account/me", {
+        const response = await apiFetch(apiUrl + "account/me", {
             method: "PUT",
             headers: getAuthHeaders(),
             body: JSON.stringify({
@@ -73,7 +74,7 @@ async function deleteAccount(){
     }
 
     try {
-        const response = await fetch(apiUrl + "account/me", {
+        const response = await apiFetch(apiUrl + "account/me", {
             method: "DELETE",
             headers: getAuthHeaders()
         });

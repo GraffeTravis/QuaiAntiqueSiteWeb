@@ -1,5 +1,6 @@
 const apiUrl = window.apiUrl;
 const getAuthHeaders = window.getAuthHeaders;
+const apiFetch = window.apiFetch;
 const getRole = window.getRole;
 const sanitizeHtml = window.sanitizeHtml;
 const bookingMessage = document.getElementById("bookingMessage");
@@ -10,7 +11,7 @@ loadBookings();
 async function loadBookings(){
     try {
         const endpoint = getRole() === "admin" ? "bookings/admin" : "bookings/";
-        const response = await fetch(apiUrl + endpoint, {
+        const response = await apiFetch(apiUrl + endpoint, {
             method: "GET",
             headers: getAuthHeaders()
         });
@@ -63,7 +64,7 @@ async function deleteBooking(id){
     }
 
     try {
-        const response = await fetch(apiUrl + "bookings/" + id, {
+        const response = await apiFetch(apiUrl + "bookings/" + id, {
             method: "DELETE",
             headers: getAuthHeaders()
         });

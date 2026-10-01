@@ -6,7 +6,7 @@ loadMenus();
 
 async function loadMenus(){
     try {
-        const response = await fetch(apiUrl + "menus");
+        const response = await window.apiFetch(apiUrl + "menus");
 
         if(!response.ok){
             throw new Error("Impossible de charger les menus pour le moment.");

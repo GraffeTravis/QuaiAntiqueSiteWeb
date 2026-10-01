@@ -1,5 +1,6 @@
 const apiUrl = window.apiUrl;
 const getAuthHeaders = window.getAuthHeaders;
+const apiFetch = window.apiFetch;
 const passwordForm = document.querySelector("form");
 const inputPassword = document.getElementById("PasswordInput");
 const inputCurrentPassword = document.getElementById("CurrentPasswordInput");
@@ -24,7 +25,7 @@ async function updatePassword(event){
     submitPasswordButton.disabled = true;
 
     try {
-        const response = await fetch(apiUrl + "account/password", {
+        const response = await apiFetch(apiUrl + "account/password", {
             method: "PUT",
             headers: getAuthHeaders(),
             body: JSON.stringify({

@@ -4,6 +4,7 @@ const getRole = window.getRole;
 const sanitizeHtml = window.sanitizeHtml;
 const apiAssetUrl = window.apiAssetUrl;
 const showAndHideElementsForRoles = window.showAndHideElementsForRoles;
+const apiFetch = window.apiFetch;
 const galerieImage = document.getElementById("allImages");
 const pictureForm = document.getElementById("pictureForm");
 const pictureIdInput = document.getElementById("PictureIdInput");
@@ -26,7 +27,7 @@ showAndHideElementsForRoles();
 
 async function loadPictures(){
     try {
-        const response = await fetch(apiUrl + `restaurants/${restaurantId}/pictures`);
+        const response = await apiFetch(apiUrl + `restaurants/${restaurantId}/pictures`);
 
         if(!response.ok){
             throw new Error("Impossible de charger la galerie.");
@@ -110,7 +111,7 @@ async function savePicture(event){
         };
 
         const endpoint = apiUrl + `restaurants/${restaurantId}/pictures` + (pictureId ? `/${pictureId}` : "");
-        const response = await fetch(endpoint, requestOptions);
+    const response = await apiFetch(endpoint, requestOptions);
 
         if(!response.ok){
             const error = await response.json().catch(() => null);
@@ -143,7 +144,7 @@ async function deletePicture(){
     }
 
     try {
-        const response = await fetch(apiUrl + `restaurants/${restaurantId}/pictures/${selectedPictureId}`, {
+        const response = await apiFetch(apiUrl + `restaurants/${restaurantId}/pictures/${selectedPictureId}`, {
             method: "DELETE",
             headers: getAuthHeaders()
         });

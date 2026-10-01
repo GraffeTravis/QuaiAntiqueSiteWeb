@@ -6,7 +6,7 @@ loadFoods();
 
 async function loadFoods(){
     try {
-        const response = await fetch(apiUrl + "foods");
+        const response = await window.apiFetch(apiUrl + "foods");
 
         if(!response.ok){
             throw new Error("Impossible de charger la carte pour le moment.");

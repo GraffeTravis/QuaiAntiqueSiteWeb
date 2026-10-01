@@ -4,6 +4,12 @@ import { test, expect } from "@playwright/test";
 const bootstrap = readFileSync(new URL("../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js", import.meta.url));
 const pixel = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/iRsAAAAASUVORK5CYII=";
 
+async function navigateApp(page, path) {
+  await page.goto(path, { waitUntil: "commit" });
+  await page.waitForFunction(() => typeof window.route === "function");
+  await page.waitForFunction(() => document.querySelector("#main-page")?.childElementCount > 0);
+}
+
 test.beforeEach(async ({ page }) => {
   await page.route(url => new URL(url).hostname !== "127.0.0.1", route =>
     route.request().url().includes("bootstrap.bundle.min.js")
@@ -19,10 +25,10 @@ test("API photo titles remain text in home, gallery and admin attributes", async
   await page.route("**/api/restaurants/1/pictures", route => route.fulfill({
     json: { pictures: [{ id: 42, title, imageUrl: pixel }] }
   }));
-  await page.goto("/");
+  await navigateApp(page, "/");
   await expect(page.locator("#homeGallery img")).toHaveAttribute("alt", title);
   await expect(page.locator("#homeGallery [onload], #homeGallery b")).toHaveCount(0);
-  await page.goto("/galerie");
+  await navigateApp(page, "/galerie");
   await expect(page.locator("#allImages img")).toHaveAttribute("alt", title);
   await expect(page.locator("#allImages [onload], #allImages b")).toHaveCount(0);
   await expect(page.locator("[data-edit-picture]")).toHaveAttribute("data-title", title);
@@ -32,7 +38,8 @@ test("API photo titles remain text in home, gallery and admin attributes", async
 });
 
 test("image URL policy rejects script, SVG and third-party origins", async ({ page }) => {
-  await page.goto("/");
+  await navigateApp(page, "/");
+  await page.waitForFunction(() => typeof window.apiAssetUrl === "function");
   const results = await page.evaluate(pixel => ({
     rejected: ["javascript:alert(1)", "data:image/svg+xml;base64,PHN2Zz4=", "https://external.example/image.jpg", "//external.example/image.jpg"].map(window.apiAssetUrl),
     accepted: [pixel, "/images/example.jpg", "http://127.0.0.1:8000/uploads/example.jpg"].map(window.apiAssetUrl)
@@ -54,7 +61,7 @@ test("login remember-me and logout follow API session expiry and revocation", as
     revokedToken = route.request().headers()["x-auth-token"];
     return route.fulfill({ json: { message: "OK" } });
   });
-  await page.goto("/signin");
+  await navigateApp(page, "/signin");
   await page.locator("#MailInput").fill("test@example.test");
   await page.locator("#PasswordInput").fill("test-password-long");
   await page.locator("#exampleCheck1").check();
@@ -71,8 +78,9 @@ test("login remember-me and logout follow API session expiry and revocation", as
   expect((await context.cookies()).some(cookie => cookie.name === "accesstoken")).toBe(false);
 });
 
-test("expired sessions are cleared and failed logout does not falsely revoke", async ({ page, context }) => {
-  await page.goto("/");
+test("expired sessions are cleared and local logout works while the API is unavailable", async ({ page, context }) => {
+  await navigateApp(page, "/");
+  await page.waitForFunction(() => typeof window.setToken === "function");
   await page.evaluate(() => {
     window.setCookie("accesstoken", "old-token", 1);
     window.setCookie("sessionExpiresAt", "2000-01-01T00:00:00Z", 1);
@@ -80,7 +88,27 @@ test("expired sessions are cleared and failed logout does not falsely revoke", a
   expect(await page.evaluate(() => window.getToken())).toBeNull();
   await page.evaluate(() => window.setToken("b".repeat(64), new Date(Date.now() + 3600000).toISOString()));
   await page.route("**/api/logout", route => route.abort());
-  page.once("dialog", dialog => dialog.accept());
   await page.evaluate(() => window.signout());
-  expect((await context.cookies()).find(cookie => cookie.name === "accesstoken").value).toBe("b".repeat(64));
+  await expect(page).toHaveURL("/signin");
+  expect((await context.cookies()).some(cookie => cookie.name === "accesstoken")).toBe(false);
+});
+
+test("a protected API 401 clears the session and redirects to sign-in", async ({ page, context }) => {
+  await navigateApp(page, "/");
+  await page.waitForFunction(() => typeof window.setToken === "function");
+  await page.evaluate(() => {
+    window.setToken("c".repeat(64), new Date(Date.now() + 3600000).toISOString());
+    window.setCookie("role", "client", 1);
+  });
+  await page.route("**/api/account/me", route => route.fulfill({ status: 401, json: { message: "Expired" } }));
+  await navigateApp(page, "/account");
+  await expect(page).toHaveURL(/\/signin\?redirect=%2Faccount/);
+  expect((await context.cookies()).some(cookie => cookie.name === "accesstoken")).toBe(false);
+});
+
+test("unknown routes return an HTTP 404 while known SPA routes remain available", async ({ request }) => {
+  const missing = await request.get("/this-route-does-not-exist");
+  expect(missing.status()).toBe(404);
+  const known = await request.get("/galerie");
+  expect(known.status()).toBe(200);
 });

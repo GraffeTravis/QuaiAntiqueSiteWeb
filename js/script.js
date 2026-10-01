@@ -12,6 +12,8 @@ const apiUrl = configuredApiUrl || (["localhost", "127.0.0.1"].includes(window.l
         : window.location.hostname.endsWith(".vercel.app")
             ? stagingApiUrl
             : "/__api_not_configured__/");
+const useHttpOnlySession = !["localhost", "127.0.0.1"].includes(window.location.hostname)
+    && apiUrl.startsWith("https://");
 
 if (signoutBtn) {
     signoutBtn.addEventListener("click", signout);
@@ -35,14 +37,16 @@ function normalizeRole(role){
 
 async function signout(){
     try {
-        const response = await fetch(apiUrl + "logout", { method: "POST", headers: getAuthHeaders() });
-        if(!response.ok && response.status !== 401){
-            throw new Error("Déconnexion impossible. Réessayez pour révoquer votre session.");
-        }
+        await fetch(apiUrl + "logout", {
+            method: "POST",
+            headers: getAuthHeaders(),
+            credentials: useHttpOnlySession ? "include" : "omit"
+        });
+    } catch {
+        // Local sign-out must remain possible while the API is unavailable.
+    } finally {
         clearSession();
         window.location.replace("/signin");
-    } catch(error) {
-        alert(error.message);
     }
 }
 
@@ -61,13 +65,21 @@ function setToken(token, expiresAt){
     setCookie("sessionExpiresAt", expiresAt, days);
 }
 
+function setSessionExpiry(expiresAt){
+    const days = Math.max(0, (Date.parse(expiresAt) - Date.now()) / 86400000);
+    if(!Number.isFinite(days) || days <= 0){
+        throw new Error("La session reçue est invalide.");
+    }
+    setCookie("sessionExpiresAt", expiresAt, days);
+}
+
 function getToken(){
     const expiry = getCookie("sessionExpiresAt");
     if(expiry && (!Number.isFinite(Date.parse(expiry)) || Date.parse(expiry) <= Date.now())){
         clearSession();
         return null;
     }
-    return getCookie(tokenCookieName);
+    return getCookie(tokenCookieName) || (expiry ? "http-only-session" : null);
 }
 
 function setCookie(name,value,days){
@@ -157,11 +169,33 @@ function getAuthHeaders(){
     myHeaders.append("Content-Type", "application/json");
 
     const token = getToken();
-    if(token){
+    if(token && token !== "http-only-session"){
         myHeaders.append("X-AUTH-TOKEN", token);
+    }
+    if(useHttpOnlySession){
+        myHeaders.append("X-AUTH-SESSION", "cookie");
     }
 
     return myHeaders;
+}
+
+async function apiFetch(input, options = {}){
+    const response = await fetch(input, {
+        ...options,
+        credentials: useHttpOnlySession && isConnected() ? "include" : "omit"
+    });
+    const url = new URL(input, window.location.origin);
+    const isCredentialEndpoint = /\/api\/(login|registration)\/?$/.test(url.pathname);
+
+    if(response.status === 401 && !isCredentialEndpoint){
+        clearSession();
+        if(!["/signin", "/signup"].includes(window.location.pathname)){
+            const redirect = window.location.pathname + window.location.search + window.location.hash;
+            window.location.replace(`/signin?redirect=${encodeURIComponent(redirect)}`);
+        }
+    }
+
+    return response;
 }
 
 function apiAssetUrl(path){
@@ -199,7 +233,7 @@ function getInfosUser(){
         redirect: 'follow'
     };
 
-    fetch(apiUrl+"account/me", requestOptions)
+    apiFetch(apiUrl+"account/me", requestOptions)
     .then(response =>{
         if(response.ok){
             return response.json();
@@ -217,12 +251,14 @@ function getInfosUser(){
 }
 
 window.apiUrl = apiUrl;
+window.useHttpOnlySession = useHttpOnlySession;
 window.tokenCookieName = tokenCookieName;
 window.RoleCookieName = RoleCookieName;
 window.getRole = getRole;
 window.signout = signout;
 window.clearSession = clearSession;
 window.setToken = setToken;
+window.setSessionExpiry = setSessionExpiry;
 window.getToken = getToken;
 window.setCookie = setCookie;
 window.getCookie = getCookie;
@@ -231,4 +267,5 @@ window.isConnected = isConnected;
 window.showAndHideElementsForRoles = showAndHideElementsForRoles;
 window.sanitizeHtml = sanitizeHtml;
 window.getAuthHeaders = getAuthHeaders;
+window.apiFetch = apiFetch;
 window.apiAssetUrl = apiAssetUrl;

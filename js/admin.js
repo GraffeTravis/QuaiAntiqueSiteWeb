@@ -326,7 +326,7 @@ async function submitJson(endpoint, method, body){
 }
 
 async function requestJson(endpoint, options = {}){
-    const response = await fetch(apiUrl + endpoint, options);
+    const response = await window.apiFetch(apiUrl + endpoint, options);
 
     if(response.status === 204){
         return null;

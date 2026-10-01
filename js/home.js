@@ -6,7 +6,7 @@ loadHomeMenus();
 
 async function loadHomeMenus(){
     try {
-        const response = await fetch(window.apiUrl + "menus");
+        const response = await window.apiFetch(window.apiUrl + "menus");
         if(!response.ok){
             throw new Error("Menus indisponibles");
         }
@@ -40,7 +40,7 @@ async function loadHomeMenus(){
 
 async function loadHomeGallery(){
     try {
-        const response = await fetch(window.apiUrl + "restaurants/1/pictures", { cache: "no-store" });
+        const response = await window.apiFetch(window.apiUrl + "restaurants/1/pictures", { cache: "no-store" });
         if(!response.ok){
             throw new Error("Galerie indisponible");
         }

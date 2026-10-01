@@ -2,6 +2,7 @@ import { loadRestaurant, getServiceRanges, getReservationSlots, isClosedOnMonday
 
 const apiUrl = window.apiUrl;
 const getAuthHeaders = window.getAuthHeaders;
+const apiFetch = window.apiFetch;
 const sanitizeHtml = window.sanitizeHtml;
 const reservationForm = document.getElementById("reservationForm");
 const reservationMessage = document.getElementById("reservationMessage");
@@ -37,7 +38,7 @@ async function loadReservationPage(){
         if(slots.length === 0){
             throw new Error("Aucun service n'est disponible pour le moment.");
         }
-        const accountResponse = await fetch(apiUrl + "account/me", {
+        const accountResponse = await apiFetch(apiUrl + "account/me", {
             method: "GET",
             headers: getAuthHeaders()
         });
@@ -52,7 +53,7 @@ async function loadReservationPage(){
 
         if(bookingId){
             submitBookingButton.textContent = "Modifier la réservation";
-            const bookingResponse = await fetch(apiUrl + "bookings/" + bookingId, {
+            const bookingResponse = await apiFetch(apiUrl + "bookings/" + bookingId, {
                 method: "GET",
                 headers: getAuthHeaders()
             });
@@ -99,7 +100,7 @@ async function checkAvailability(){
     }
 
     try {
-        const response = await fetch(apiUrl + "bookings/availability?" + params.toString(), { headers: getAuthHeaders() });
+        const response = await apiFetch(apiUrl + "bookings/availability?" + params.toString(), { headers: getAuthHeaders() });
 
         if(!response.ok){
             throw new Error("Disponibilité impossible à vérifier.");
@@ -141,7 +142,7 @@ async function saveBooking(event){
     };
 
     try {
-        const response = await fetch(apiUrl + "bookings" + (bookingId ? "/" + bookingId : ""), {
+        const response = await apiFetch(apiUrl + "bookings" + (bookingId ? "/" + bookingId : ""), {
             method: bookingId ? "PUT" : "POST",
             headers: getAuthHeaders(),
             body: JSON.stringify(payload)

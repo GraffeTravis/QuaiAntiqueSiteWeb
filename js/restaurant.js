@@ -1,5 +1,5 @@
 export async function loadRestaurant(){
-    const response = await fetch(window.apiUrl + "restaurants/1");
+    const response = await window.apiFetch(window.apiUrl + "restaurants/1");
     if(!response.ok){
         throw new Error("Les horaires ne sont pas disponibles pour le moment.");
     }
