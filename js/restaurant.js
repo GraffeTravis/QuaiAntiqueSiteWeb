@@ -28,7 +28,7 @@ export function getReservationSlots(ranges){
     for(const [start, end] of ranges){
         const first = toMinutes(start);
         const last = toMinutes(end);
-        for(let minutes = Math.ceil(first / 15) * 15; minutes <= last; minutes += 15){
+        for(let minutes = Math.ceil(first / 15) * 15; minutes < last; minutes += 15){
             slots.add(`${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`);
         }
     }

@@ -100,9 +100,10 @@ test("les créneaux et le footer suivent les horaires administrés, le lundi res
   }));
 
   await navigateApp(page, "/reserver");
-  await expect(page.locator("#selectHour option")).toHaveCount(18);
+  await expect(page.locator("#selectHour option")).toHaveCount(16);
   await expect(page.locator("#selectHour option").first()).toHaveText("11:30");
-  await expect(page.locator("#selectHour option").last()).toHaveText("20:30");
+  await expect(page.locator("#selectHour option").last()).toHaveText("20:15");
+  await expect(page.locator("#selectHour option[value='20:30']")).toHaveCount(0);
   await expect(page.locator("[data-service-hours]").first()).toHaveText("11h30–13h30 · 18h30–20h30");
   await page.getByLabel("Date", { exact: true }).fill("2030-01-08");
   await expect(page.locator("#bookingSubmitBtn")).toBeEnabled();
