@@ -22,7 +22,13 @@ const getRouteByUrl = (url) => {
 };
 
 // Fonction pour charger le contenu de la page
+let navigationId = 0;
+let pageController;
+
 const LoadContentPage = async () => {
+ const currentNavigation = ++navigationId;
+ pageController?.abort();
+ pageController = new AbortController();
  const path = window.location.pathname;
   // Récupération de l'URL actuelle
   const actualRoute = getRouteByUrl(path);
@@ -52,7 +58,22 @@ const LoadContentPage = async () => {
   }
 
   // Récupération du contenu HTML de la route
-  const html = await fetch(actualRoute.pathHtml + "?v=" + Date.now()).then((data) => data.text());
+  let response;
+  try {
+    response = await fetch(actualRoute.pathHtml + "?v=" + Date.now(), { signal: pageController.signal });
+  } catch (error) {
+    if (error.name === "AbortError") return;
+    response = null;
+  }
+
+  if (currentNavigation !== navigationId) return;
+  if (!response?.ok) {
+    document.getElementById("main-page").innerHTML = "<section class=\"container py-5\"><h1>Page indisponible</h1><p>Le contenu n’a pas pu être chargé. Réessayez.</p></section>";
+    return;
+  }
+
+  const html = await response.text();
+  if (currentNavigation !== navigationId) return;
   // Ajout du contenu HTML à l'élément avec l'ID "main-page"
   document.getElementById("main-page").innerHTML = html;
   document.querySelectorAll("header .nav-link[href]").forEach((link) => {
@@ -65,7 +86,7 @@ const LoadContentPage = async () => {
     }
   });
   if(!window.location.hash){
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }
 
   // Ajout du contenu JavaScript
@@ -84,6 +105,8 @@ const LoadContentPage = async () => {
 
     // Ajout de la balise script au corps du document
     document.querySelector("body").appendChild(scriptTag);
+  } else {
+    document.getElementById("page-script")?.remove();
   }
 
   // Changement du titre de la page

@@ -3,6 +3,16 @@ import { test, expect } from "@playwright/test";
 
 const bootstrap = readFileSync(new URL("../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js", import.meta.url));
 
+async function navigateApp(page, path, reload = false) {
+  if (reload) {
+    await page.reload({ waitUntil: "commit" });
+  } else {
+    await page.goto(path, { waitUntil: "commit" });
+  }
+  await page.waitForFunction(() => typeof window.route === "function");
+  await page.waitForFunction(() => document.querySelector("#main-page")?.childElementCount > 0);
+}
+
 test.beforeEach(async ({ page }) => {
   await page.route(url => new URL(url).hostname !== "127.0.0.1", route =>
     route.request().url().includes("bootstrap.bundle.min.js")
@@ -12,15 +22,15 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("navigation, reservation et compte anonyme", async ({ page }) => {
-  await page.goto("/", { waitUntil: "commit" });
+  await navigateApp(page, "/");
   await expect(page.getByRole("heading", { name: "Quai Antique", level: 1 })).toBeVisible();
   await page.locator(".hero-scene a[href='/reserver']").click();
   await expect(page).toHaveURL(/\/signin\?redirect=%2Freserver$/);
   await expect(page.getByRole("heading", { name: "Connexion" })).toBeVisible();
 
-  await page.goto("/account", { waitUntil: "commit" });
+  await navigateApp(page, "/account");
   await expect(page).toHaveURL(/\/signin\?redirect=%2Faccount$/);
-  await page.goto("/galerie", { waitUntil: "commit" });
+  await navigateApp(page, "/galerie");
   await expect(page.getByRole("heading", { name: "Galerie" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Ajouter une photo" })).toBeHidden();
 });
@@ -47,7 +57,7 @@ test("la carte, les menus, la galerie d'accueil et les horaires", async ({ page 
     body: JSON.stringify({ menus: [{ title: "Menu Découverte", description: "Entrée, plat et dessert", price: 47 }] })
   }));
 
-  await page.goto("/", { waitUntil: "commit" });
+  await navigateApp(page, "/");
   await expect(page.locator("#homeGallery img")).toHaveCount(3);
   await expect(page.locator("#homeMenus .home-menu-title p")).toHaveText(/47,00\s*€/);
   await expect(page.locator(".footer-hours dd[data-service-hours]")).toHaveCount(6);
@@ -89,7 +99,7 @@ test("les créneaux et le footer suivent les horaires administrés, le lundi res
     body: JSON.stringify({ available: true, remaining: 12 })
   }));
 
-  await page.goto("/reserver", { waitUntil: "commit" });
+  await navigateApp(page, "/reserver");
   await expect(page.locator("#selectHour option")).toHaveCount(18);
   await expect(page.locator("#selectHour option").first()).toHaveText("11:30");
   await expect(page.locator("#selectHour option").last()).toHaveText("20:30");
@@ -112,7 +122,7 @@ test("les horaires indisponibles ne créent pas de faux créneaux", async ({ pag
     document.cookie = "role=client; path=/";
   });
   await page.route("**/api/restaurants/1", route => route.fulfill({ status: 503, body: "" }));
-  await page.goto("/reserver", { waitUntil: "commit" });
+  await navigateApp(page, "/reserver");
   await expect(page.locator("#reservationMessage")).toContainText("horaires ne sont pas disponibles");
   await expect(page.locator("#selectHour")).toBeDisabled();
   await expect(page.locator("#selectHour option")).toHaveCount(0);
@@ -127,11 +137,11 @@ test("l'accueil distingue les menus vides et indisponibles sans inventer de prix
     contentType: "application/json",
     body: JSON.stringify({ menus: [] })
   }));
-  await page.goto("/", { waitUntil: "commit" });
+  await navigateApp(page, "/");
   await expect(page.locator("#homeMenus")).toContainText("Le chef prépare les prochains menus");
   await expect(page.locator("#homeMenus .home-menu-item")).toHaveCount(0);
   fails = true;
-  await page.reload({ waitUntil: "commit" });
+  await navigateApp(page, "/", true);
   await expect(page.locator("#homeMenus")).toContainText("Les menus ne sont pas disponibles");
   await expect(page.locator("#homeMenus .home-menu-item")).toHaveCount(0);
 });
@@ -144,7 +154,7 @@ test("l'accueil affiche uniquement les photos API et les actualise au retour", a
     requests++;
     return route.fulfill({ json: { pictures: Array.from({ length: 4 }, (_, id) => ({ id, title: id === 0 ? title : `Photo API ${id}`, imageUrl })) } });
   });
-  await page.goto("/", { waitUntil: "commit" });
+  await navigateApp(page, "/");
   await expect(page.locator("#homeGallery img")).toHaveCount(3);
   await expect(page.locator("#homeGallery img").first()).toHaveAttribute("src", imageUrl);
   await expect(page.locator("#homeGallery img").first()).toHaveAttribute("alt", title);
@@ -161,13 +171,13 @@ test("la galerie vide ou indisponible ne remplace jamais les photos par des imag
   let status = 200;
   let body = { pictures: [] };
   await page.route("**/api/restaurants/1/pictures", route => route.fulfill({ status, json: body }));
-  await page.goto("/", { waitUntil: "commit" });
+  await navigateApp(page, "/");
   await expect(page.locator("#homeGallery")).toContainText("arrivent bientôt");
   await expect(page.locator("#homeGallery img")).toHaveCount(0);
   for(const invalidResponse of [false, true]){
     status = invalidResponse ? 200 : 503;
     body = invalidResponse ? {} : { pictures: [] };
-    await page.reload({ waitUntil: "commit" });
+    await navigateApp(page, "/", true);
     await expect(page.locator("#homeGallery")).toContainText("momentanément indisponible");
     await expect(page.locator("#homeGallery img")).toHaveCount(0);
     await expect(page.locator("#homeGallery")).toHaveAttribute("aria-busy", "false");
@@ -175,7 +185,7 @@ test("la galerie vide ou indisponible ne remplace jamais les photos par des imag
 });
 
 test("le fond reste fixe et les sections claires restent translucides sur mobile et ordinateur", async ({ page }) => {
-  await page.goto("/", { waitUntil: "commit" });
+  await navigateApp(page, "/");
   await expect(page.locator(".house-introduction")).toBeVisible();
   for(const width of [320, 390, 768, 1440]){
     await page.setViewportSize({ width, height: 900 });
@@ -200,7 +210,7 @@ test("le fond reste fixe et les sections claires restent translucides sur mobile
 
 test("menu mobile Bootstrap", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/", { waitUntil: "commit" });
+  await navigateApp(page, "/");
   const toggle = page.getByRole("button", { name: "Toggle navigation" });
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
   await toggle.click();
@@ -214,7 +224,7 @@ test("un administrateur ne voit pas la page compte", async ({ page }) => {
     document.cookie = "accesstoken=test-admin; path=/";
     document.cookie = "role=admin; path=/";
   });
-  await page.goto("/account", { waitUntil: "commit" });
+  await navigateApp(page, "/account");
   await expect(page).toHaveURL("/");
   await expect(page.getByRole("link", { name: "Administration" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Mon compte" })).toBeHidden();
@@ -250,7 +260,7 @@ test("la galerie admin ajoute, renomme et supprime une photo", async ({ page }) 
     await route.fulfill({ status: method === "POST" ? 201 : 200, contentType: "application/json", body: JSON.stringify(body) });
   });
 
-  await page.goto("/galerie", { waitUntil: "commit" });
+  await navigateApp(page, "/galerie");
   await page.getByRole("button", { name: "Ajouter une photo" }).click();
   await page.getByLabel("Titre", { exact: true }).fill("Photo test");
   await page.getByLabel("Image", { exact: true }).setInputFiles({ name: "photo.png", mimeType: "image/png", buffer: Buffer.from(imageUrl.split(",")[1], "base64") });

@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { allRoutes } from "../Router/allRoutes.js";
 
@@ -35,6 +35,14 @@ for (const route of allRoutes) {
 for (const requiredRoute of ["/", "/galerie", "/lacarte", "/signin", "/signup", "/account", "/allresa", "/reserver", "/admin"]) {
   if (!routeUrls.has(requiredRoute)) {
     errors.push(`Route attendue manquante : ${requiredRoute}`);
+  }
+}
+
+const vercelConfig = JSON.parse(readFileSync("vercel.json", "utf8"));
+const deployedRoutes = new Set((vercelConfig.rewrites || []).map(rewrite => rewrite.source));
+for (const route of allRoutes.filter(route => route.url !== "/")) {
+  if (!deployedRoutes.has(route.url)) {
+    errors.push(`Route Vercel manquante : ${route.url}`);
   }
 }
 

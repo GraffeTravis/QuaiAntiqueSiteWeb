@@ -17,8 +17,10 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - run: npm audit --audit-level=high
       - run: npm run build:css
       - run: git diff --exit-code -- scss/main.css scss/main.css.map
       - run: npm run check
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      - run: npm run test:e2e -- --workers=1
+      - run: docker build -t quai-antique-front:${{ github.sha }} .
